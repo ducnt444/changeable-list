@@ -78,15 +78,15 @@ body
         $.ajax({
           type: "PUT",
           url: `https://changable-list-test.herokuapp.com/users/${userID}`,
-          data: `name=${$("input")[0].value}&birthday=${$("input")[1].value}&email=${$("input")[2].value}&phone=${$("input")[3].value}`
+          data: `name=${$("input")[0].value}&birthday=${$("input")[1].value}&email=${$("input")[2].value}&phone=${$("input")[3].value}`,
+          success: function() {
+            $(".body-text").html(`
+              Cập nhật học viên ${$("input")[0].value} thành công!
+              <br>
+              Bạn có muốn quay về trang chủ?`
+            )
+          }
         });
-        
-        $(".body-text").html(`
-        Cập nhật học viên ${$("input")[0].value} thành công!
-        <br>
-        Bạn có muốn quay về trang chủ?`
-        )
-
       });
 
       $(".modal--back").click(() => {
