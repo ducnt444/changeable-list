@@ -74,7 +74,7 @@ body
       $(".modal--back").click(() => {
         location.replace("index.html");
         $.post(
-          "http://localhost:3000/users",
+          "https://changable-list-test.herokuapp.com/users",
           {
           "name": $("input")[0].value,
           "birthday": $("input")[1].value,
@@ -86,7 +86,7 @@ body
 
       $(".modal--continue").click(() => {
         $.post(
-          "http://localhost:3000/users",
+          "https://changable-list-test.herokuapp.com/users",
           {
           "name": $("input")[0].value,
           "birthday": $("input")[1].value,

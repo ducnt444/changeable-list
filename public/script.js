@@ -32,7 +32,7 @@ function loadDoc() {
   };
   
   //GET từ server
-  xhttp.open("GET", "http://localhost:3000/users", true);
+  xhttp.open("GET", "https://changable-list-test.herokuapp.com/users", true);
   xhttp.send();
 }
 
