@@ -8,14 +8,13 @@ function loadDoc() {
       let users = JSON.parse(this.responseText); 
       let content = "";
       for (let i = 0; i < users.length; i++) {
-        content += 
-        `<tr>
+        content += `<tr>
           <td>${users[i].name}</td>
           <td>${users[i].birthday.substr(-4)}</td>
           <td>${users[i].email}</td>
           <td>${users[i].phone}</td>
           <td>
-          <a class="btn btn--edit text-primary" href="details.html">
+          <a class="btn btn--edit text-primary" href="edit.html">
             <span> <i class="far fa-edit"></i> </span>
             <span class="ml-2">Chỉnh sửa</span>
           </a>
