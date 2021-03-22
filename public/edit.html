@@ -61,6 +61,39 @@
        $("input")[2].value = user.email;
        $("input")[3].value = user.phone;
       
+        $("#save").click(() => {
+        $(".body-text").html(`
+        Thêm học viên mới ${$("input")[0].value} thành công!
+        <br>
+        Bạn có muốn quay về trang chủ?`
+        )
+      });
+
+      $(".modal--back").click(() => {
+        //location.replace("index.html");
+        $.post(
+          "https://changable-list-test.herokuapp.com/users",
+          {
+          "name": $("input")[0].value,
+          "birthday": $("input")[1].value,
+          "email": $("input")[2].value,
+          "phone": $("input")[3].value
+          }
+        );
+      });
+
+      $(".modal--continue").click(() => {
+        $.post(
+          "https://changable-list-test.herokuapp.com/users",
+          {
+          "name": $("input")[0].value,
+          "birthday": $("input")[1].value,
+          "email": $("input")[2].value,
+          "phone": $("input")[3].value
+          }
+        );
+      });
+
       
             
     </script>
