@@ -47,40 +47,65 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
     <script>
       $("#save").click(() => {
-        $(".body-text").html(`
-        Thêm học viên mới ${$("input")[0].value} thành công!
-        <br>
-        Bạn có muốn quay về trang chủ?`
-        )
+        $.post(
+          "https://changable-list-test.herokuapp.com/users",
+          {
+          "name": $("input")[0].value,
+          "birthday": $("input")[1].value,
+          "email": $("input")[2].value,
+          "phone": $("input")[3].value
+          }
+        ).done(function() {
+            $(".body-text").html(`
+              Thêm học viên ${$("input")[0].value} thành công!
+              <br>
+              Bạn có muốn quay về trang chủ?`
+            )
+          })
       });
       
       $(".modal--back").click(() => {
         location.replace("index.html");
-        $.post(
-          "https://changable-list-test.herokuapp.com/users",
-          {
-          "name": $("input")[0].value,
-          "birthday": $("input")[1].value,
-          "email": $("input")[2].value,
-          "phone": $("input")[3].value
-          }
-        );
-      });
-      
-      $(".modal--continue").click(() => {
-        $.post(
-          "https://changable-list-test.herokuapp.com/users",
-          {
-          "name": $("input")[0].value,
-          "birthday": $("input")[1].value,
-          "email": $("input")[2].value,
-          "phone": $("input")[3].value
-          }
-        );
-      });
+      })
       
       
-            
     </script>
+    <!--
+    $("#save").click(() => {
+      $(".body-text").html(`
+      Thêm học viên mới ${$("input")[0].value} thành công!
+      <br>
+      Bạn có muốn quay về trang chủ?`
+      )
+    });
+    
+    $(".modal--back").click(() => {
+      location.replace("index.html");
+      $.post(
+        "https://changable-list-test.herokuapp.com/users",
+        {
+        "name": $("input")[0].value,
+        "birthday": $("input")[1].value,
+        "email": $("input")[2].value,
+        "phone": $("input")[3].value
+        }
+      );
+    });
+    
+    $(".modal--continue").click(() => {
+      $.post(
+        "https://changable-list-test.herokuapp.com/users",
+        {
+        "name": $("input")[0].value,
+        "birthday": $("input")[1].value,
+        "email": $("input")[2].value,
+        "phone": $("input")[3].value
+        }
+      );
+    });
+    
+    
+          
+    -->
   </div>
 </body>
