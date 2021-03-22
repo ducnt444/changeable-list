@@ -1,4 +1,6 @@
 
+
+
 function loadDoc() {
   //tạo
   let xhttp = new XMLHttpRequest();
@@ -14,7 +16,7 @@ function loadDoc() {
           <td>${users[i].email}</td>
           <td>${users[i].phone}</td>
           <td>
-          <a class="btn btn--edit text-primary" href="edit.html">
+          <a class="btn btn--edit text-primary" href="edit.html?${i+1}">
             <span> <i class="far fa-edit"></i> </span>
             <span class="ml-2">Chỉnh sửa</span>
           </a>
