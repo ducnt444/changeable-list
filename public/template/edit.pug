@@ -75,26 +75,28 @@ body
       )
 
       $("#save").click(() => {
-        $(".body-text").html(`
-        Cập nhật học viên ${$("input")[0].value} thành công!
-        <br>
-        Bạn có muốn quay về trang chủ?`
-        )
+        $.ajax({
+          type: "PUT",
+          url: `https://changable-list-test.herokuapp.com/users/${userID}`,
+          data: `name=${$("input")[0].value}&birthday=${$("input")[1].value}&email=${$("input")[2].value}&phone=${$("input")[3].value}`,
+          success: function(data) {
+            $(".body-text").html(`
+            Cập nhật học viên ${data.name} thành công!
+            <br>
+            Bạn có muốn quay về trang chủ?`
+            )
+          },
+          dataType: dataType
+        });
+        
       });
 
       $(".modal--back").click(() => {
-        location.replace("index.html");
-        $.post(
-          "https://changable-list-test.herokuapp.com/users",
-          {
-          "name": $("input")[0].value,
-          "birthday": $("input")[1].value,
-          "email": $("input")[2].value,
-          "phone": $("input")[3].value
-          }
-        );
+        //location.replace("index.html");
+
       });
 
+    //
       $(".modal--continue").click(() => {
         $.post(
           "https://changable-list-test.herokuapp.com/users",
