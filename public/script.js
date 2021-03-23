@@ -8,7 +8,7 @@ function loadDoc() {
       let users = JSON.parse(this.responseText); 
       let content = "";
       for (let i = 0; i < users.length; i++) {
-        content += `<tr>
+        content += `<tr id = "item${users[i].id}">
           <td>${users[i].name}</td>
           <td>${users[i].birthday.substr(-4)}</td>
           <td>${users[i].email}</td>
@@ -40,6 +40,8 @@ function loadDoc() {
 
 loadDoc();
 
+let targetId = "";
+
 $("tbody").on('click', '.btn--delete', function() { 
     $("#index__modal .modal--cancel").css("display", "block");
     $("#index__modal .modal__text").html(
@@ -48,7 +50,12 @@ $("tbody").on('click', '.btn--delete', function() {
         .children("td:first-child")
         .text()}</span> ?`
     );
+    targetId = +this.previousElementSibling.href.split("?")[1] 
   //console.log(this.previousElementSibling.href.split("?")[1]); 
+});
+
+$("#index__modal").on('click', '.modal--success', function() {
+  $(`#item${targetId}`).detach()
 });
 
 $("thead").on('change', 'input', function() { 
@@ -68,4 +75,5 @@ $("thead").on("click", ".btn--delete-selected ", function () {
     $("#index__modal .modal__text").text("Không có mục nào được chọn");
   }
 });
+
 
