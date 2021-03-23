@@ -52,4 +52,7 @@ $("thead").on('change', 'input', function() {
   }
 });
 
+$("tbody").on("click", ".btn--delete", function () {
+  
+});
 
