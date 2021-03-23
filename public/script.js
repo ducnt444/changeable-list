@@ -52,7 +52,9 @@ $("thead").on('change', 'input', function() {
   }
 });
 
-$("tbody").on("click", ".btn--delete", function () {
-  
+$("tbody").on("click", ".btn--delete-selected ", function () {
+  if ( !$("table input").is(":checked") ) {
+    console.log("none checked")
+  }
 });
 
