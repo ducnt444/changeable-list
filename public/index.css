@@ -164,3 +164,11 @@ th:last-child {
 .table td, .table th {
   vertical-align: middle;
 }
+
+table input {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  top: 5px
+}
+

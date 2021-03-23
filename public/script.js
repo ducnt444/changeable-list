@@ -40,5 +40,15 @@ function loadDoc() {
 
 loadDoc();
 
-$("tbody").on('click', '.btn--delete', function() { console.log(this.previousElementSibling.href.split("?")[1]); });
+$("tbody").on('click', '.btn--delete', function() { 
+  console.log(this.previousElementSibling.href.split("?")[1]); 
+});
+
+$("thead").on('change', 'input', function() { 
+  if ( $("thead input").is(":checked") ) {
+    $("tbody input").prop("checked", true);
+  } else {
+    $("tbody input").prop("checked", false);
+  }
+});
 
