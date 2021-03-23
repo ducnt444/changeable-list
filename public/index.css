@@ -172,3 +172,7 @@ table input {
   top: 5px
 }
 
+.thead-dark th:nth-child(5) {
+  cursor: pointer;
+  user-select: none;
+}

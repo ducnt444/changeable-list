@@ -14,7 +14,7 @@ function loadDoc() {
           <td>${users[i].email}</td>
           <td>${users[i].phone}</td>
           <td>
-          <a class="btn btn--edit text-primary" href="edit.html?${i+1}">
+          <a class="btn btn--edit text-primary" href="edit.html?${users[i].id}">
             <span> <i class="far fa-edit"></i> </span>
             <span class="ml-2">Chỉnh sửa</span>
             <span class="ml-3">|</span>
@@ -51,4 +51,5 @@ $("thead").on('change', 'input', function() {
     $("tbody input").prop("checked", false);
   }
 });
+
 
