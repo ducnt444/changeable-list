@@ -19,7 +19,7 @@ function loadDoc() {
             <span class="ml-2">Chỉnh sửa</span>
             <span class="ml-3">|</span>
           </a>
-          <button class="btn btn--delete text-danger pl-0">
+          <button class="btn btn--delete text-danger pl-0" data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false">
             <span> <i class="fas fa-trash-alt"></i> </span>
             <span class="ml-2">Xóa</span>
           </button>
@@ -41,7 +41,14 @@ function loadDoc() {
 loadDoc();
 
 $("tbody").on('click', '.btn--delete', function() { 
-  console.log(this.previousElementSibling.href.split("?")[1]); 
+    $("#index__modal .modal--cancel").css("display", "block");
+    $("#index__modal .modal__text").html(
+      `Bạn có muốn xóa học viên <span class="bold-font">${$(this)
+        .parents("tr")
+        .children("td:first-child")
+        .text()}</span> ?`
+    );
+  //console.log(this.previousElementSibling.href.split("?")[1]); 
 });
 
 $("thead").on('change', 'input', function() { 
@@ -55,7 +62,7 @@ $("thead").on('change', 'input', function() {
 $("thead").on("click", ".btn--delete-selected ", function () {
   if ($("table input").is(":checked")) {
     $("#index__modal .modal--cancel").css("display", "block");
-    $("#index__modal .modal__text").text("Bạn có muốn xóa các mục này?");
+    $("#index__modal .modal__text").text("Bạn có muốn xóa các mục được chọn?");
   } else {
     $("#index__modal .modal--cancel").css("display", "none");
     $("#index__modal .modal__text").text("Không có mục nào được chọn");

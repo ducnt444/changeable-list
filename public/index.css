@@ -109,6 +109,10 @@ input[type=number] {
   transition: all 0.3s;
 }
 
+.bold-font {
+  font-weight: bold !important;
+}
+
 h1 {
   font-size: 32px !important;
   font-weight: bold !important;
@@ -120,7 +124,7 @@ h1 {
 }
 
 #index__modal .btn {
-  min-width: 100px;
+  min-width: 110px;
 }
 
 form {
