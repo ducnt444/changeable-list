@@ -52,9 +52,13 @@ $("thead").on('change', 'input', function() {
   }
 });
 
-$("tbody").on("click", ".btn--delete-selected ", function () {
-  if ( !$("table input").is(":checked") ) {
-    console.log("none checked")
+$("thead").on("click", ".btn--delete-selected ", function () {
+  if ($("table input").is(":checked")) {
+    $("#index__modal .modal--cancel").css("display", "block");
+    $("#index__modal .modal__text").text("Bạn có muốn xóa các mục này?");
+  } else {
+    $("#index__modal .modal--cancel").css("display", "none");
+    $("#index__modal .modal__text").text("Không có mục nào được chọn");
   }
 });
 

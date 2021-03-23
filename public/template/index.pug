@@ -11,6 +11,17 @@ head
 
 body
   .container.d-flex.flex-column.justify-content-center.align-items-center.mt-5 
+    #index__modal.modal.fade
+      .modal-dialog
+        .modal-content
+
+          .modal-body
+            p.modal__text
+
+          .modal-footer.d-flex.justify-content-center
+            a.btn.btn-success.modal--success(data-dismiss='modal') OK
+            a.btn.btn-secondary.modal--cancel.ml-4(data-dismiss='modal') Hủy bỏ
+
     h1.text-center Danh sách học viên
 
     a.bg-success.align-self-start.btn.btn--add.my-4(href="create.html")
@@ -25,7 +36,7 @@ body
           th Năm sinh
           th Email
           th Số điện thoại
-          th.text-center.btn--delete-selected 
+          th.text-right.btn--delete-selected(data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false")
             i.fas.fa-trash-alt.mr-2
             | Xóa các mục được chọn
           th 

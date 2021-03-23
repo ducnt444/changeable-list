@@ -114,6 +114,15 @@ h1 {
   font-weight: bold !important;
 }
 
+#index__modal .modal-content {
+  border-radius: 8px;
+  box-shadow: 0px 0px 15px rgb(255 255 255 / 40%);
+}
+
+#index__modal .btn {
+  min-width: 100px;
+}
+
 form {
   padding: 0px;
   margin-top: 30px;
@@ -175,4 +184,14 @@ table input {
 .thead-dark th:nth-child(5) {
   cursor: pointer;
   user-select: none;
+}
+
+@media only screen and (min-width: 1200px) {
+  body {
+    max-width: calc(100vw - 17px);
+  }
+
+  body.modal-open {
+    padding-right: 0px !important;
+  }
 }

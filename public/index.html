@@ -7,6 +7,16 @@
 </head>
 <body>
   <div class="container d-flex flex-column justify-content-center align-items-center mt-5"> 
+    <div class="modal fade" id="index__modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <p class="modal__text"></p>
+          </div>
+          <div class="modal-footer d-flex justify-content-center"><a class="btn btn-success modal--success" data-dismiss="modal">OK</a><a class="btn btn-secondary modal--cancel ml-4" data-dismiss="modal">Hủy bỏ</a></div>
+        </div>
+      </div>
+    </div>
     <h1 class="text-center">Danh sách học viên</h1><a class="bg-success align-self-start btn btn--add my-4" href="create.html"><span class="text-light"> <i class="fas fa-plus-circle"></i></span><span class="text-light ml-2">Thêm học viên </span></a>
     <table class="table table-striped">
       <thead class="thead-dark">
@@ -15,7 +25,7 @@
           <th>Năm sinh</th>
           <th>Email</th>
           <th>Số điện thoại</th>
-          <th class="text-center btn--delete-selected"> <i class="fas fa-trash-alt mr-2"></i>Xóa các mục được chọn</th>
+          <th class="text-right btn--delete-selected" data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false"><i class="fas fa-trash-alt mr-2"></i>Xóa các mục được chọn</th>
           <th> 
             <input type="checkbox">
           </th>
