@@ -40,40 +40,127 @@ function loadDoc() {
 
 loadDoc();
 
+//Xác định id học viên nào được click
 let targetId = "";
+let targetArr = [];
 
+
+/* -----------------------------------
+ "xóa đơn" toggler
+----------------------------------- */
+
+//1. Event "click nút xóa đơn": toggle và update modal confirm
 $("tbody").on('click', '.btn--delete', function() { 
+  
+    //nút xác nhận đổi sang chế độ "xác nhận xóa đơn"
+    $("#index__modal .modal--success").addClass("delete--single");
+
+    //nút cancel được hiển thị 
     $("#index__modal .modal--cancel").css("display", "block");
+
+    //nội dung .modal__text thay đổi
     $("#index__modal .modal__text").html(
       `Bạn có muốn xóa học viên <span class="bold-font">${$(this)
         .parents("tr")
         .children("td:first-child")
         .text()}</span> ?`
     );
+
+    //update id học viên đang được chọn để xóa đơn
     targetId = +this.previousElementSibling.href.split("?")[1] 
-  //console.log(this.previousElementSibling.href.split("?")[1]); 
 });
 
-$("#index__modal").on('click', '.modal--success', function() {
-  $(`#item${targetId}`).detach()
+//2. Event "click confirm xóa đơn": Xóa học viên trên table và database
+$("#index__modal").on('click', '.modal--success.delete--single', function() {
+  $.ajax({
+    url: `https://changable-list-test.herokuapp.com/users/${targetId}`,
+    type: "DELETE",
+    success: () => {
+      //item:id này đã được setup làm id cho từng tr khi load trang
+      $(`#item${targetId}`).detach()
+    }
+  })
 });
 
+
+
+/* -----------------------------------
+ nút toggler chọn check tất cả 
+----------------------------------- */
+
+//Event: khi bất kỳ thẻ input nào của thead có thay đổi
 $("thead").on('change', 'input', function() { 
+
+  //check xem checkbox tổng có đang check không
   if ( $("thead input").is(":checked") ) {
+
+    //nếu có: check mọi checkbox đơn
     $("tbody input").prop("checked", true);
   } else {
+
+    //nếu không: hủy check mọi checkbox đơn
     $("tbody input").prop("checked", false);
   }
 });
 
-$("thead").on("click", ".btn--delete-selected ", function () {
+
+
+/* -----------------------------------
+ nút "Xóa các mục được chọn" 
+----------------------------------- */
+
+//1. Event "click lên nút Xóa các mục được chọn": kiểm tra tình trạng các checkbox để update modal và chế độ của nút xác nhận 
+$("thead").on("click", ".btn--delete-selected ", () => {
+
+  //Check: nếu có bất kỳ checkbox nào trong table đang được check
   if ($("table input").is(":checked")) {
+
+    //nút xác nhận hủy chế độ "xác nhận xóa đơn", chuyển sang chế độ "xóa nhiều"
+    $("#index__modal .modal--success").removeClass("delete--single");
+    $("#index__modal .modal--success").addClass("delete--multiple");
+
+    //Hiển thị nút cancel trong index modal
     $("#index__modal .modal--cancel").css("display", "block");
+
+    //Update .modal__text
     $("#index__modal .modal__text").text("Bạn có muốn xóa các mục được chọn?");
+
+  //Check: nếu không có bất kỳ checkbox nào trong table đang được check 
   } else {
+
+    //nút xác nhận hủy chế độ "xác nhận xóa đơn"
+    $("#index__modal .modal--success").removeClass("delete--single");
+
+    //Ẩn nút cancel trong index modal
     $("#index__modal .modal--cancel").css("display", "none");
+
+    //Update .modal__text
     $("#index__modal .modal__text").text("Không có mục nào được chọn");
   }
 });
+
+//2. Event "click lên nút xác nhận xóa nhiều": kiểm tra tình trạng các checkbox để xóa item tương ứng
+
+$("#index__modal").on("click", ".modal--success.delete--multiple", () => {
+
+  let itemArr = $("tbody tr").has("input:checked").toArray()
+
+  for(let i = 0; i < itemArr.length; i ++) {
+
+    targetId = itemArr[i].id.slice(4);
+
+    $(`#item${targetId}`).detach();
+
+    $.ajax({
+      url: `https://changable-list-test.herokuapp.com/users/${targetId}`,
+      type: "DELETE"
+    })
+  }
+
+  if($("thead input").is(":checked")) {
+    $("thead input")[0].checked = false;
+  }
+  
+})
 
 
