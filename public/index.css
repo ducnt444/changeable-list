@@ -143,6 +143,21 @@ table .btn {
   padding-bottom: 0px;
 }
 
+table {
+  position: relative;
+}
+
+.spinner-border.text-primary {
+  position: absolute;
+  top: 100px;
+  right: 50%;
+}
+
+table input {
+  position: relative;
+  left: 13px;
+}
+
 label {
   width: 10%;
   margin: 0px;
@@ -164,12 +179,12 @@ form input {
   color: rgb(105, 0, 0) !important;
 }
 
-th:nth-child(5) {
+th:nth-child(6) {
   width: 250px;
   max-width: 250px;
 }
 
-th:last-child {
+th:first-child {
   width: 70px;
   max-width: 250px;
 }

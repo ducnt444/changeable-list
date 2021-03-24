@@ -17,21 +17,26 @@
         </div>
       </div>
     </div>
-    <h1 class="text-center">Danh sách học viên</h1><a class="bg-success align-self-start btn btn--add my-4" href="create.html"><span class="text-light"> <i class="fas fa-plus-circle"></i></span><span class="text-light ml-2">Thêm học viên </span></a>
+    <h1 class="text-center">Danh sách học viên</h1>
+    <div class="buttons-wrapper d-flex justify-content-between w-100"> <a class="bg-danger align-self-start btn btn--delete-selected my-4" data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false"><span class="text-light"> <i class="fas fa-trash-alt mr-2"></i></span><span class="text-light ml-2">Xóa các mục được chọn</span></a><a class="bg-success align-self-start btn btn--add my-4" href="create.html"><span class="text-light"> <i class="fas fa-plus-circle"></i></span><span class="text-light ml-2">Thêm học viên </span></a></div>
     <table class="table table-striped">
       <thead class="thead-dark">
         <tr class="table-head">
+          <th> 
+            <input type="checkbox">
+          </th>
           <th>Họ tên</th>
           <th>Năm sinh</th>
           <th>Email</th>
           <th>Số điện thoại</th>
-          <th class="text-right btn--delete-selected" data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false"><i class="fas fa-trash-alt mr-2"></i>Xóa các mục được chọn</th>
-          <th> 
-            <input type="checkbox">
-          </th>
+          <th>Thao tác</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody>
+        <tr>
+          <td class="spinner-border text-primary"></td>
+        </tr>
+      </tbody>
     </table>
     <script src="https://kit.fontawesome.com/d8c5e3f38e.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

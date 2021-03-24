@@ -24,24 +24,32 @@ body
 
     h1.text-center Danh sách học viên
 
-    a.bg-success.align-self-start.btn.btn--add.my-4(href="create.html")
-      span.text-light 
-        i.fas.fa-plus-circle
-      span.text-light.ml-2 Thêm học viên 
-    
+    .buttons-wrapper.d-flex.justify-content-between.w-100 
+
+      a.bg-danger.align-self-start.btn.btn--delete-selected.my-4(data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false")
+        span.text-light 
+          i.fas.fa-trash-alt.mr-2
+        span.text-light.ml-2 Xóa các mục được chọn
+      
+      a.bg-success.align-self-start.btn.btn--add.my-4(href="create.html")
+        span.text-light 
+          i.fas.fa-plus-circle
+        span.text-light.ml-2 Thêm học viên 
+
     table.table.table-striped
       thead.thead-dark
         tr.table-head
+          th 
+            input(type="checkbox")
           th Họ tên
           th Năm sinh
           th Email
           th Số điện thoại
-          th.text-right.btn--delete-selected(data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false")
-            i.fas.fa-trash-alt.mr-2
-            | Xóa các mục được chọn
-          th 
-            input(type="checkbox")
+          th Thao tác
+          
       tbody
+        tr
+          td.spinner-border.text-primary
 
     script(src='https://kit.fontawesome.com/d8c5e3f38e.js' crossorigin='anonymous')
 

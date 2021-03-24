@@ -9,6 +9,9 @@ function loadDoc() {
       let content = "";
       for (let i = 0; i < users.length; i++) {
         content += `<tr id = "item${users[i].id}">
+          <td>
+            <input type="checkbox">
+          </td>
           <td>${users[i].name}</td>
           <td>${users[i].birthday.substr(-4)}</td>
           <td>${users[i].email}</td>
@@ -23,9 +26,6 @@ function loadDoc() {
             <span> <i class="fas fa-trash-alt"></i> </span>
             <span class="ml-2">Xóa</span>
           </button>
-          </td>
-          <td>
-            <input type="checkbox">
           </td>
         </tr>`;
       }
@@ -62,12 +62,13 @@ $("tbody").on('click', '.btn--delete', function() {
     $("#index__modal .modal__text").html(
       `Bạn có muốn xóa học viên <span class="bold-font">${$(this)
         .parents("tr")
-        .children("td:first-child")
+        .children("td:nth-child(2)")
         .text()}</span> ?`
     );
 
     //update id học viên đang được chọn để xóa đơn
-    targetId = +this.previousElementSibling.href.split("?")[1] 
+    targetId = this.parentElement.parentElement.id.slice(4);
+    console.log(targetId);
 });
 
 //2. Event "click confirm xóa đơn": Xóa học viên trên table và database
@@ -109,8 +110,12 @@ $("thead").on('change', 'input', function() {
  nút "Xóa các mục được chọn" 
 ----------------------------------- */
 
+$("table").on("click", "table input", () => {
+  $(".buttons-wrapper .bg-danger").css("width", "200px");
+});
+
 //1. Event "click lên nút Xóa các mục được chọn": kiểm tra tình trạng các checkbox để update modal và chế độ của nút xác nhận 
-$("thead").on("click", ".btn--delete-selected ", () => {
+$(".buttons-wrapper").on("click", ".btn--delete-selected ", () => {
 
   //Check: nếu có bất kỳ checkbox nào trong table đang được check
   if ($("table input").is(":checked")) {
@@ -125,7 +130,7 @@ $("thead").on("click", ".btn--delete-selected ", () => {
     //Update .modal__text
     $("#index__modal .modal__text").text("Bạn có muốn xóa các mục được chọn?");
 
-  //Check: nếu không có bất kỳ checkbox nào trong table đang được check 
+    //Check: nếu không có bất kỳ checkbox nào trong table đang được check
   } else {
 
     //nút xác nhận hủy chế độ "xác nhận xóa đơn"
@@ -143,24 +148,29 @@ $("thead").on("click", ".btn--delete-selected ", () => {
 
 $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
 
-  let itemArr = $("tbody tr").has("input:checked").toArray()
+  //Tạo 1 array chứa các thẻ tr đang có input được check
+  let itemArr = $("tbody tr").has("input:checked").toArray();
 
-  for(let i = 0; i < itemArr.length; i ++) {
+  //loop: mỗi tr trong array trên sẽ:
+  for (let i = 0; i < itemArr.length; i++) {
 
+    //update targetid
     targetId = itemArr[i].id.slice(4);
 
+    //xóa dòng này
     $(`#item${targetId}`).detach();
 
+    //xóa item trên database
     $.ajax({
       url: `https://changable-list-test.herokuapp.com/users/${targetId}`,
-      type: "DELETE"
-    })
+      type: "DELETE",
+    });
   }
 
-  if($("thead input").is(":checked")) {
+  //xóa nhiều xong thì bỏ check nút check tổng
+  if ($("thead input").is(":checked")) {
     $("thead input")[0].checked = false;
   }
-  
 })
 
 
