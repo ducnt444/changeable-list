@@ -64,7 +64,7 @@ body
     script.
 
       let userID = location.href.split("?")[1];
-      
+
       $.get(
         `https://changable-list-test.herokuapp.com/users/${userID}`,
         function(data) {
