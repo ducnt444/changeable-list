@@ -61,7 +61,9 @@
               <br>
               Bạn có muốn quay về trang chủ?`
             )
-            $("input").val("");
+            $(".modal--continue").click(() => {
+              $("input").val("")
+            })
           })
       });
       
