@@ -34,7 +34,7 @@ function loadDoc() {
   };
   
   //GET từ server
-  xhttp.open("GET", "https://changable-list-test.herokuapp.com/users", true);
+  xhttp.open("GET", "https://changable-list-test.herokuapp.com/users?_page=1&_limit=10", true);
   xhttp.send();
 }
 
