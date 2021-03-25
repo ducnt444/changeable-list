@@ -10,7 +10,11 @@ head
   link(rel="stylesheet" href="index.css")
 
 body
-  .container.d-flex.flex-column.justify-content-center.align-items-center.mt-5.px-0 
+
+  .loading-wrapper
+    .spinner-border.text-primary.loading
+
+  .page-wrapper.container.flex-column.justify-content-center.align-items-center.mt-5.px-0 
     #index__modal.modal.fade
       .modal-dialog
         .modal-content
@@ -24,14 +28,13 @@ body
 
     h1.text-center Danh sách học viên
 
+    
+
     form.search-area(action="")
-      .input-group
-        .input-group-prepend
-          span.input-group-text 
-            i.fas.fa-search
-        input.form-control.search-input(type='text' placeholder='Tìm theo tên, năm sinh...')
+      input.form-control.search-input(type='text' placeholder='Tìm theo tên, năm sinh...')
         
-      button.search-submit.btn.btn-primary(type="submit") Tìm kiếm
+      button.search-submit.btn.btn-outline-dark(type="submit") 
+        i.fas.fa-search
 
     .buttons-wrapper.d-flex.justify-content-between.w-100 
       a.bg-danger.align-self-start.btn.btn--delete-selected.my-4.disabled(data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false")
@@ -45,10 +48,10 @@ body
         span.text-light.ml-2 Thêm học viên 
 
     ul.pagination
-      li.page-item.btn.disabled
+      li.page-item.btn.disabled.first-page
         a.page-link
           i.fas.fa-angle-double-left
-      li.page-item.btn.disabled
+      li.page-item.btn.disabled.prev-page
         a.page-link
           i.fas.fa-angle-left
       li.page-item.btn.active
@@ -61,10 +64,10 @@ body
         a.page-link 4
       li.page-item.btn
         a.page-link ...
-      li.page-item.btn
+      li.page-item.btn.next-page
         a.page-link 
           i.fas.fa-angle-right
-      li.page-item.btn
+      li.page-item.btn.last-page
         a.page-link
           i.fas.fa-angle-double-right
 
@@ -81,14 +84,12 @@ body
           th Thao tác
           
       tbody
-        tr
-          td.spinner-border.text-primary
     
     ul.pagination
-      li.page-item.btn.disabled
+      li.page-item.btn.disabled.first-page
         a.page-link
           i.fas.fa-angle-double-left
-      li.page-item.btn.disabled
+      li.page-item.btn.disabled.prev-page
         a.page-link
           i.fas.fa-angle-left
       li.page-item.active
@@ -101,10 +102,10 @@ body
         a.page-link 4
       li.page-item
         a.page-link ...
-      li.page-item
+      li.page-item.next-page
         a.page-link 
           i.fas.fa-angle-right
-      li.page-item
+      li.page-item.last-page
         a.page-link
           i.fas.fa-angle-double-right
 
@@ -116,7 +117,8 @@ body
 
     script(src="script.js")
 
-    script.
+    script(src="index.js")
+
       
 
     

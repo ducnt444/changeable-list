@@ -107,6 +107,27 @@ input[type=checkbox] {
 
 /* --------------- kết thúc reset css --------------- */
 
+.page-wrapper {
+  display: none;
+}
+
+.loading-wrapper {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0px;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 10000;
+}
+
+.loading {
+  position: absolute;
+  left: 49%;
+  left: calc(50% - 24px);
+  top: 49px;
+  top: calc(50% - 24px);
+}
+
 *:not(i, .close, h1) {
   font-size: 16px !important;
   font-weight: 500 !important;
@@ -162,12 +183,6 @@ table .btn {
 
 table {
   position: relative;
-}
-
-.spinner-border.text-primary {
-  position: absolute;
-  top: 100px;
-  right: 50%;
 }
 
 table input {
@@ -230,21 +245,33 @@ table input {
   margin: 30px auto 0px 0px
 }
 
-.search-area .input-group {
-  width: 80%;
-  border: 2px solid #bbbbbb;
+.search-area input {
+  width: 100%;
+  border: 1px solid #bbbbbb;
+  margin-right: 20px;
   border-radius: 8px;
-}
-
-.search-area .input-group-text {
-  padding-right: 0px;
 }
 
 .search-input:focus {
   box-shadow: none;
+  border-color: #000;
 }
 
-.search-area .input-group-text, .search-input {
+/* .search-area .input-group {
+  width: 80%;
+  border: 2px solid #bbbbbb;
+  border-radius: 8px;
+}
+ */
+
+/* .search-area .input-group-text {
+  padding-right: 0px;
+  background-color: transparent;
+  border: none;
+  border-radius: 8px;
+} */
+
+.search-input {
   background-color: transparent;
   border: none;
   border-radius: 8px;
@@ -252,12 +279,13 @@ table input {
 
 .search-submit {
   border-radius: 8px;
-  height: 42px;
+  height: 40px;
+  width: 60px;
 }
 
 .page-link {
-  width: 40px;
-  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
