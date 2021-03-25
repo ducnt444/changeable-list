@@ -68,7 +68,6 @@ $("tbody").on('click', '.btn--delete', function() {
 
     //update id học viên đang được chọn để xóa đơn
     targetId = this.parentElement.parentElement.id.slice(4);
-    console.log(targetId);
 });
 
 //2. Event "click confirm xóa đơn": Xóa học viên trên table và database
@@ -89,7 +88,7 @@ $("#index__modal").on('click', '.modal--success.delete--single', function() {
  nút toggler chọn check tất cả 
 ----------------------------------- */
 
-//Event: khi bất kỳ thẻ input nào của thead có thay đổi
+//Event: khi bất kỳ thẻ input nào của thead (a.k.a checkbox tổng) có thay đổi
 $("thead").on('change', 'input', function() { 
 
   //check xem checkbox tổng có đang check không
@@ -97,10 +96,12 @@ $("thead").on('change', 'input', function() {
 
     //nếu có: check mọi checkbox đơn
     $("tbody input").prop("checked", true);
+    console.log("check all")
   } else {
 
     //nếu không: hủy check mọi checkbox đơn
     $("tbody input").prop("checked", false);
+    console.log("uncheck all")
   }
 });
 
@@ -110,8 +111,12 @@ $("thead").on('change', 'input', function() {
  nút "Xóa các mục được chọn" 
 ----------------------------------- */
 
-$("table").on("click", "table input", () => {
-  $(".buttons-wrapper .bg-danger").css("width", "200px");
+$("table").on("change", "input", () => {
+  if ($("table input").is(":checked")) {
+    $(".buttons-wrapper .bg-danger").removeClass("disabled");
+  } else {
+    $(".buttons-wrapper .bg-danger").addClass("disabled");
+  }
 });
 
 //1. Event "click lên nút Xóa các mục được chọn": kiểm tra tình trạng các checkbox để update modal và chế độ của nút xác nhận 
@@ -145,7 +150,6 @@ $(".buttons-wrapper").on("click", ".btn--delete-selected ", () => {
 });
 
 //2. Event "click lên nút xác nhận xóa nhiều": kiểm tra tình trạng các checkbox để xóa item tương ứng
-
 $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
 
   //Tạo 1 array chứa các thẻ tr đang có input được check
@@ -174,3 +178,14 @@ $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
 })
 
 
+/* -----------------------------------
+ search area 
+----------------------------------- */
+
+$(".search-input").focusin(() => {
+  $(".input-group").css("border-color", "black")
+})
+
+$(".search-input").focusout(() => {
+  $(".input-group").css("border-color", "#bbbbbb")
+})

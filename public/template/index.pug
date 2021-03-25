@@ -24,10 +24,18 @@ body
 
     h1.text-center Danh sách học viên
 
-    .buttons-wrapper.d-flex.justify-content-between.w-100 
+    form.search-area(action="")
+      .input-group
+        .input-group-prepend
+          span.input-group-text 
+            i.fas.fa-search
+        input.form-control.search-input(type='text' placeholder='Tìm theo tên, năm sinh...')
+        
+      button.search-submit.btn.btn-primary(type="submit") Tìm kiếm
 
-      a.bg-danger.align-self-start.btn.btn--delete-selected.my-4(data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false")
-        span.text-light 
+    .buttons-wrapper.d-flex.justify-content-between.w-100 
+      a.bg-danger.align-self-start.btn.btn--delete-selected.my-4.disabled(data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false")
+        span.text-light
           i.fas.fa-trash-alt.mr-2
         span.text-light.ml-2 Xóa các mục được chọn
       

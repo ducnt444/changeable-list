@@ -16,16 +16,16 @@ body
         .modal-content
 
           .modal-body
-            .body-text
+            .modal-text
               .spinner-border.mx-auto.d-block
             
-          .modal-footer.d-flex.justify-content-center
-            button.btn.btn-success.modal--back.mr-4(type='button' data-dismiss='modal') Quay về trang chủ
-            button.btn.btn-info.modal--continue(type='button' data-dismiss='modal') Thêm học viên khác
+          .modal-footer.d-flex.justify-content-center.border-0
+            button.btn.btn-success.modal--back.mr-4.invisible(type='button' data-dismiss='modal') Quay về trang chủ
+            button.btn.btn-info.modal--continue.invisible(type='button' data-dismiss='modal') Thêm học viên khác
 
     h1.text-center Thêm mới học viên
 
-    form.w-100(action="")
+    form.main-form.w-100(action="")
       .form-group
         label(for="name") Họ tên 
           span *
@@ -51,7 +51,7 @@ body
             i.fas.fa-angle-left
           span Quay lại 
          
-        button.ml-3.btn.bg-success.text-light#save(type="button" data-toggle="modal" data-target="#add-finish" data-backdrop="static" data-keyboard="false")
+        button.ml-3.btn.bg-success.text-light#save(type="button" data-toggle="modal" data-target="#add-finish" data-backdrop="static" data-keyboard="false" value="")
           span.mr-2
             i.fas.fa-save
           span Lưu
@@ -74,16 +74,22 @@ body
           "phone": $("input")[3].value
           }
         ).done(function() {
-            $(".body-text").html(`
+            $(".modal-text").html(`
               Thêm học viên <span class="bold-font">${$("input")[0].value}</span> thành công!
               <br>
               Bạn có muốn quay về trang chủ?`
             )
-            $(".modal--continue").click(() => {
-              $("input").val("")
-            })
+            $(".modal-footer button").removeClass("invisible")
           })
       });
+
+      $(".modal--continue").click(() => {
+        $("input").val("");
+        setTimeout(() => {
+          $("#input__name").focus()
+        }, 700)
+        
+      })      
 
       $(".modal--back").click(() => {
         location.replace("index.html");

@@ -18,7 +18,14 @@
       </div>
     </div>
     <h1 class="text-center">Danh sách học viên</h1>
-    <div class="buttons-wrapper d-flex justify-content-between w-100"> <a class="bg-danger align-self-start btn btn--delete-selected my-4" data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false"><span class="text-light"> <i class="fas fa-trash-alt mr-2"></i></span><span class="text-light ml-2">Xóa các mục được chọn</span></a><a class="bg-success align-self-start btn btn--add my-4" href="create.html"><span class="text-light"> <i class="fas fa-plus-circle"></i></span><span class="text-light ml-2">Thêm học viên </span></a></div>
+    <form class="search-area" action="">
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text"> <i class="fas fa-search"></i></span></div>
+        <input class="form-control search-input" type="text" placeholder="Tìm theo tên, năm sinh...">
+      </div>
+      <button class="search-submit btn btn-primary" type="submit">Tìm kiếm</button>
+    </form>
+    <div class="buttons-wrapper d-flex justify-content-between w-100"> <a class="bg-danger align-self-start btn btn--delete-selected my-4 disabled" data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false"><span class="text-light"><i class="fas fa-trash-alt mr-2"></i></span><span class="text-light ml-2">Xóa các mục được chọn</span></a><a class="bg-success align-self-start btn btn--add my-4" href="create.html"><span class="text-light"> <i class="fas fa-plus-circle"></i></span><span class="text-light ml-2">Thêm học viên </span></a></div>
     <table class="table table-striped">
       <thead class="thead-dark">
         <tr class="table-head">
