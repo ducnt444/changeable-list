@@ -13,7 +13,8 @@ function loadDoc() {
             <input type="checkbox">
           </td>
           <td>${users[i].name}</td>
-          <td>${users[i].birthday.substr(-4)}</td>
+          <td>${users[i].birthday}</td>
+          <td>${users[i].gender.replace("Male", "Nam").replace("Female", "Nữ")}</td>
           <td>${users[i].email}</td>
           <td>${users[i].phone}</td>
           <td>

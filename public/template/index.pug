@@ -10,7 +10,7 @@ head
   link(rel="stylesheet" href="index.css")
 
 body
-  .container.d-flex.flex-column.justify-content-center.align-items-center.mt-5 
+  .container.d-flex.flex-column.justify-content-center.align-items-center.mt-5.px-0 
     #index__modal.modal.fade
       .modal-dialog
         .modal-content
@@ -44,13 +44,38 @@ body
           i.fas.fa-plus-circle
         span.text-light.ml-2 Thêm học viên 
 
-    table.table.table-striped
+    ul.pagination
+      li.page-item.btn.disabled
+        a.page-link
+          i.fas.fa-angle-double-left
+      li.page-item.btn.disabled
+        a.page-link
+          i.fas.fa-angle-left
+      li.page-item.btn.active
+        a.page-link 1      
+      li.page-item.btn
+        a.page-link 2
+      li.page-item.btn
+        a.page-link 3
+      li.page-item.btn
+        a.page-link 4
+      li.page-item.btn
+        a.page-link ...
+      li.page-item.btn
+        a.page-link 
+          i.fas.fa-angle-right
+      li.page-item.btn
+        a.page-link
+          i.fas.fa-angle-double-right
+
+    table.table.table-striped.my-4
       thead.thead-dark
         tr.table-head
           th 
             input(type="checkbox")
           th Họ tên
-          th Năm sinh
+          th Ngày sinh 
+          th Giới tính
           th Email
           th Số điện thoại
           th Thao tác
@@ -58,6 +83,30 @@ body
       tbody
         tr
           td.spinner-border.text-primary
+    
+    ul.pagination
+      li.page-item.btn.disabled
+        a.page-link
+          i.fas.fa-angle-double-left
+      li.page-item.btn.disabled
+        a.page-link
+          i.fas.fa-angle-left
+      li.page-item.active
+        a.page-link 1      
+      li.page-item
+        a.page-link 2
+      li.page-item
+        a.page-link 3
+      li.page-item
+        a.page-link 4
+      li.page-item
+        a.page-link ...
+      li.page-item
+        a.page-link 
+          i.fas.fa-angle-right
+      li.page-item
+        a.page-link
+          i.fas.fa-angle-double-right
 
     script(src='https://kit.fontawesome.com/d8c5e3f38e.js' crossorigin='anonymous')
 

@@ -101,6 +101,10 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+input[type=checkbox] {
+  cursor: pointer;
+}
+
 /* --------------- kết thúc reset css --------------- */
 
 *:not(i, .close, h1) {
@@ -131,8 +135,13 @@ td .btn {
   min-width: 110px;
 }
 
+tbody tr {
+  transition: all 0.2s;
+}
+
 tbody tr:hover {
-  box-shadow: 2px 2px 5px #888888;
+  box-shadow: 3px 3px 8px #888888;
+  transform: scaleX(1.005);
 }
 
 .main-form {
@@ -187,14 +196,13 @@ label span {
   color: rgb(105, 0, 0) !important;
 }
 
-th:nth-child(6) {
+th:nth-child(5) {
   width: 250px;
   max-width: 250px;
 }
 
 th:first-child {
   width: 70px;
-  max-width: 250px;
 }
 
 .table td, .table th {
@@ -243,10 +251,35 @@ table input {
 }
 
 .search-submit {
-
   border-radius: 8px;
   height: 42px;
 }
+
+.page-link {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px !important;
+  font-weight: bold !important;
+  cursor: pointer;
+  color: black;
+  border-color: #bbbbbb;
+}
+
+.page-link:hover, .page-item.active .page-link {
+  background-color: #000;
+  color: #fff;
+  border: black;
+}
+
+.page-item.btn {
+  border-radius: unset;
+  padding: 0px;
+  border: none;
+}
+
 
 
 @media only screen and (min-width: 1200px) {
