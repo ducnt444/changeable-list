@@ -219,7 +219,7 @@ $(".next-page").click(() => {
     function(data) {
 
       for (let i = 0; i < data.length; i++) {
-        $("tbody tr")[i].id = data[i].id;
+        $("tbody tr")[i].id = `item${data[i].id}`;
         $("tbody tr")[i].children[1].innerText = data[i].name;
         $("tbody tr")[i].children[2].innerText = data[i].birthday;
         $("tbody tr")[i].children[3].innerText = data[i].gender;
