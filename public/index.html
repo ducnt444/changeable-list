@@ -8,6 +8,7 @@
 <body>
   <div class="loading-wrapper">
     <div class="spinner-border text-primary loading"></div>
+    <p class="loading__text">Vui lòng đợi trong giây lát</p>
   </div>
   <div class="page-wrapper container flex-column justify-content-center align-items-center mt-5 px-0"> 
     <div class="modal fade" id="index__modal">
@@ -20,15 +21,15 @@
         </div>
       </div>
     </div>
-    <h1 class="text-center">Danh sách học viên</h1>
+    <h1 class="text-center"> <a href="index.html">Danh sách học viên</a></h1>
     <form class="search-area" action="">
       <input class="form-control search-input" type="text" placeholder="Tìm theo tên, năm sinh...">
       <button class="search-submit btn btn-outline-dark" type="submit"> <i class="fas fa-search"></i></button>
     </form>
     <div class="buttons-wrapper d-flex justify-content-between w-100"> <a class="bg-danger align-self-start btn btn--delete-selected my-4 disabled" data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false"><span class="text-light"><i class="fas fa-trash-alt mr-2"></i></span><span class="text-light ml-2">Xóa các mục được chọn</span></a><a class="bg-success align-self-start btn btn--add my-4" href="create.html"><span class="text-light"> <i class="fas fa-plus-circle"></i></span><span class="text-light ml-2">Thêm học viên </span></a></div>
     <ul class="pagination">
-      <li class="page-item btn disabled first-page"><a class="page-link"><i class="fas fa-angle-double-left"></i></a></li>
-      <li class="page-item btn disabled prev-page"><a class="page-link"><i class="fas fa-angle-left"></i></a></li>
+      <li class="page-item btn first-page"><a class="page-link"><i class="fas fa-angle-double-left"></i></a></li>
+      <li class="page-item btn prev-page"><a class="page-link"><i class="fas fa-angle-left"></i></a></li>
       <li class="page-item btn active"><a class="page-link">1      </a></li>
       <li class="page-item btn"><a class="page-link">2</a></li>
       <li class="page-item btn"><a class="page-link">3</a></li>
@@ -54,8 +55,8 @@
       <tbody></tbody>
     </table>
     <ul class="pagination">
-      <li class="page-item btn disabled first-page"><a class="page-link"><i class="fas fa-angle-double-left"></i></a></li>
-      <li class="page-item btn disabled prev-page"><a class="page-link"><i class="fas fa-angle-left"></i></a></li>
+      <li class="page-item btn first-page"><a class="page-link"><i class="fas fa-angle-double-left"></i></a></li>
+      <li class="page-item btn prev-page"><a class="page-link"><i class="fas fa-angle-left"></i></a></li>
       <li class="page-item active"><a class="page-link">1      </a></li>
       <li class="page-item"><a class="page-link">2</a></li>
       <li class="page-item"><a class="page-link">3</a></li>

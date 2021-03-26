@@ -13,6 +13,7 @@ body
 
   .loading-wrapper
     .spinner-border.text-primary.loading
+    p.loading__text Vui lòng đợi trong giây lát
 
   .page-wrapper.container.flex-column.justify-content-center.align-items-center.mt-5.px-0 
     #index__modal.modal.fade
@@ -26,9 +27,8 @@ body
             a.btn.btn-success.modal--success(data-dismiss='modal') Xác nhận
             a.btn.btn-secondary.modal--cancel.ml-4(data-dismiss='modal') Hủy bỏ
 
-    h1.text-center Danh sách học viên
-
-    
+    h1.text-center 
+      a(href="index.html") Danh sách học viên
 
     form.search-area(action="")
       input.form-control.search-input(type='text' placeholder='Tìm theo tên, năm sinh...')
@@ -48,10 +48,10 @@ body
         span.text-light.ml-2 Thêm học viên 
 
     ul.pagination
-      li.page-item.btn.disabled.first-page
+      li.page-item.btn.first-page
         a.page-link
           i.fas.fa-angle-double-left
-      li.page-item.btn.disabled.prev-page
+      li.page-item.btn.prev-page
         a.page-link
           i.fas.fa-angle-left
       li.page-item.btn.active
@@ -86,10 +86,10 @@ body
       tbody
     
     ul.pagination
-      li.page-item.btn.disabled.first-page
+      li.page-item.btn.first-page
         a.page-link
           i.fas.fa-angle-double-left
-      li.page-item.btn.disabled.prev-page
+      li.page-item.btn.prev-page
         a.page-link
           i.fas.fa-angle-left
       li.page-item.active

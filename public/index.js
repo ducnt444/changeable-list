@@ -17,12 +17,12 @@ Xác định độ dài của mỗi page. Mặc định sẽ là 10 users
 let currentLimit = "10";
 
 Xác định số lượng users hiện tại có trên database, sẽ update mỗi khi có tương tác đến số lượng user (DELETE, POST)
-let usersQuantity = "";
+let usersQuantity; (là NUMBER)
 
 */
 
 /* ------------------------------------------------------------------------------------------
- load trang: GET users từ database, loop ra các tr là các users (có id tương tứng)
+ load trang: GET users page 1 từ database, loop ra các tr là các users (có kèm id tương ứng)
 ------------------------------------------------------------------------------------------ */
 function loadDoc() {
   //tạo
@@ -30,12 +30,14 @@ function loadDoc() {
   //code sẽ chạy khi lấy được dữ liệu từ server
   xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
-      let users = JSON.parse(this.responseText); 
+      let users = JSON.parse(this.responseText);
       let content = "";
       for (let i = 0; i < users.length; i++) {
-        content += `<tr id = "item${users[i].id}">
+        content += `<tr id = "item${users[i].id}" class = "row${i + 1}">
           <td>
-            <input type="checkbox">
+            <div class="checkbox-wrapper">
+              <input type="checkbox">
+            </div>
           </td>
           <td>${users[i].name}</td>
           <td>${users[i].birthday}</td>
@@ -60,15 +62,30 @@ function loadDoc() {
       $(".page-wrapper").css("display", "flex");
     }
   };
-  
   //load 10 users
-  xhttp.open("GET", `${usersURL}?_page=${currentPage}&_limit=10`, true);
+  xhttp.open("GET", `${usersURL}?_page=${currentPage}&_limit=10&_sort=id&_order=desc`, true);
   xhttp.send();
 }
 
 loadDoc();
 
+/* ------------------------------------------------------------------------------------------
+load trang: GET số lượng users, số lượng pages từ database
+------------------------------------------------------------------------------------------ */
 
+$.get(
+  usersURL,
+  ).done(
+    function(data) {
+      usersQuantity = data.length;
+      pagesQuantity = Math.ceil(usersQuantity/10)
+
+      console.log("Total users: " + usersQuantity)
+      console.log("Total pages: " + pagesQuantity)
+      console.log("Current page: " + currentPage)
+      
+    }
+  )
 
 /* ------------------------------------------------------------------------------------------
  "xóa đơn" toggler
@@ -208,35 +225,125 @@ $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
  pagination 
 ------------------------------------------------------------------------------------------ */ 
 
-//bấm nút next sẽ nhảy sang trang ?_page= (currentPage + 1) &_limit=10 
+//bấm nút prev: sẽ nhảy về trang ?_page= (currentPage - 1) &_limit=10&_sort=id&_order=desc 
+$(".prev-page").click(() => {
+  $(".loading-wrapper").css("display", "block");
+  if (currentPage > 0) {
+    
+    $.get(
+      `${usersURL}?_page=${currentPage - 1}&_limit=10&_sort=id&_order=desc`
+    ).done(
+      function(data) {
+  
+        for (let i = 0; i < 10; i++) {
+          if (data[i] == undefined) {
+            $(`.row${i + 1}`).detach()
 
+          } else if ( $("tbody tr")[i] == undefined ) {
+            $("tbody").append(`<tr id = "item${data[i].id}" class = "row${i + 1}">
+            <td>
+              <div class="checkbox-wrapper">
+                <input type="checkbox">
+              </div>
+            </td>
+            <td>${data[i].name}</td>
+            <td>${data[i].birthday}</td>
+            <td>${data[i].gender}</td>
+            <td>${data[i].email}</td>
+            <td>${data[i].phone}</td>
+            <td>
+            <a class="btn btn--edit text-primary" href="edit.html?${data[i].id}">
+              <span> <i class="far fa-edit"></i> </span>
+              <span class="ml-2">Chỉnh sửa</span>
+              <span class="ml-3">|</span>
+            </a>
+            <button class="btn btn--delete text-danger pl-0" data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false">
+              <span> <i class="fas fa-trash-alt"></i> </span>
+              <span class="ml-2">Xóa</span>
+            </button>
+            </td>
+          </tr>`)
+            console.log(data[i])
+
+          } else {
+            console.log($("btn--edit"))
+            /* $("btn--edit")[i].href = `edit.html?${data[i].id}` */
+            $("tbody tr")[i].id = `item${data[i].id}`;
+            $("tbody tr")[i].children[1].innerText = data[i].name;
+            $("tbody tr")[i].children[2].innerText = data[i].birthday;
+            $("tbody tr")[i].children[3].innerText = data[i].gender;
+            $("tbody tr")[i].children[4].innerText = data[i].email;
+            $("tbody tr")[i].children[5].innerText = data[i].phone;
+          }
+        }
+  
+        $(".loading-wrapper").css("display", "none");  
+  
+        currentPage--;
+        console.log("Current page: " + currentPage);
+      }
+    )
+  }
+})
+
+
+//bấm nút next: sẽ nhảy sang trang ?_page= (currentPage + 1) &_limit=10&_sort=id&_order=desc 
 $(".next-page").click(() => {
   $(".loading-wrapper").css("display", "block");
 
+  if (currentPage < pagesQuantity) { //VD page 50 / 51 thì mới cho phép next
+    $.get(
+      `${usersURL}?_page=${currentPage + 1}&_limit=10&_sort=id&_order=desc`
+    ).done(
+      function(data) {
+        let content = "";
+        
+        for ( let i = 0; i < data.length; i++) {
+          content += rowTemplate(data, i)
+        }
+
+        $("tbody").html(content)
+
+        $(".loading-wrapper").css("display", "none");  
+  
+        currentPage++;
+        console.log("Current page: " + currentPage)
+      }
+    )
+  }
+
+})
+
+
+//bấm nút last: sẽ nhảy sang trang ?_page= (pagesQuantity) &_limit=10 
+$(".last-page").click(() => {
+  $(".loading-wrapper").css("display", "block");
+
   $.get(
-    `${usersURL}?_page=${currentPage + 1}&_limit=10`
+    `${usersURL}?_page=${pagesQuantity}&_limit=10&_limit=10&_sort=id&_order=desc`
   ).done(
     function(data) {
 
-      for (let i = 0; i < data.length; i++) {
-        $("tbody tr")[i].id = `item${data[i].id}`;
-        $("tbody tr")[i].children[1].innerText = data[i].name;
-        $("tbody tr")[i].children[2].innerText = data[i].birthday;
-        $("tbody tr")[i].children[3].innerText = data[i].gender;
-        $("tbody tr")[i].children[4].innerText = data[i].email;
-        $("tbody tr")[i].children[5].innerText = data[i].phone;
+      for (let i = 0; i < 10; i++) {
+        if (data[i] == undefined) {
+          $(`.row${i + 1}`).detach()
+        } else {
+          $("tbody tr")[i].id = `item${data[i].id}`;
+          $("tbody tr")[i].children[1].innerText = data[i].name;
+          $("tbody tr")[i].children[2].innerText = data[i].birthday;
+          $("tbody tr")[i].children[3].innerText = data[i].gender;
+          $("tbody tr")[i].children[4].innerText = data[i].email;
+          $("tbody tr")[i].children[5].innerText = data[i].phone;
+        }
       }
 
       $(".loading-wrapper").css("display", "none");  
 
-      currentPage++;
+      currentPage = pagesQuantity;
+      console.log("Current page: " + currentPage)
     }
   )
 })
-
-
-
-
 
 
 

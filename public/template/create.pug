@@ -23,25 +23,35 @@ body
             button.btn.btn-success.modal--back.mr-4.invisible(type='button' data-dismiss='modal') Quay về trang chủ
             button.btn.btn-info.modal--continue.invisible(type='button' data-dismiss='modal') Thêm học viên khác
 
-    h1.text-center Thêm mới học viên
+    h1.text-center 
+      a(href="create.html") Thêm mới học viên
 
     form.main-form.w-100(action="")
       .form-group
-        label(for="name") Họ tên 
+        label(for="input__name") Họ tên 
           span *
         input#input__name(type="text") 
 
       .form-group 
-        label(for="name") Năm sinh 
-        input#input__dob(type="text") 
+        label(for="input__birthday") Năm sinh 
+        input#input__birthday(type="text")
 
       .form-group 
-        label(for="name") Email 
+        label(for="") Giới tính
+
+        label.gender-label(for="input__gender--male") Nam
+        input#input__gender--male.gender-input(type="radio" name="gender" value="Nam") 
+
+        label.gender-label(for="input__gender--female") Nữ
+        input#input__gender--female.gender-input(type="radio" name="gender" value="Nữ")
+
+      .form-group 
+        label(for="input__email") Email 
           span *
         input#input__email(type="text") 
 
       .form-group 
-        label(for="name") Phone 
+        label(for="input__phone") Phone 
           span *
         input#input__phone(type="text")
 
@@ -65,6 +75,15 @@ body
     script(src="script.js")
     
     script.
+      let gender;
+
+      $(".gender-input").click(() => {
+        if($("#input__gender--male").is(":checked")) {
+          gender = "Nam"
+        } else {
+          gender = "Nữ"
+        }
+      });
 
       $("#save").click(() => {
         $.post(
@@ -72,8 +91,9 @@ body
           {
           "name": $("input")[0].value,
           "birthday": $("input")[1].value,
-          "email": $("input")[2].value,
-          "phone": $("input")[3].value
+          "gender": gender,
+          "email": $("input")[4].value,
+          "phone": $("input")[5].value
           }
         ).done(function() {
             $(".modal-text").html(`
@@ -86,7 +106,13 @@ body
       });
 
       $(".modal--continue").click(() => {
+
+        if( $("#input__gender--male").prop("checked") || $("#input__gender--female").prop("checked") ) {
+          $(".gender-input").prop("checked", false);
+        }
+
         $("input").val("");
+        
         setTimeout(() => {
           $("#input__name").focus()
         }, 700)
