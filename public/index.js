@@ -231,9 +231,6 @@ $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
  search mode 
 ------------------------------------------------------------------------------------------ */
 
-
-
-
 //hiệu ứng
 $(".search-input").focusin(() => {
   $(".input-group").css("border-color", "black")
@@ -244,7 +241,7 @@ $(".search-input").focusout(() => {
 })
 
   
-  
+
 //Khi click nút search
 
 $(".search-submit").click(() => {
@@ -263,6 +260,10 @@ $(".search-submit").click(() => {
     `${usersURL}?q=${searchInput}&_page=${currentPage}&_limit=10&_sort=id&_order=desc`
   ).done(
     function(data) {
+      $(".search__result").text(
+        `Kết quả tìm kiếm cho "${searchInput}"`
+      );
+
       let content = "";
 
       for ( let i = 0; i < data.length; i++) {

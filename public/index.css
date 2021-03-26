@@ -137,7 +137,7 @@ input[type=checkbox] {
   font-size: 18px;
   font-weight: bold !important;
   left: 49%;
-  left: calc(50% - 100px);
+  left: calc(50% - 115px);
   top: 56%;
   top: calc(57% - 24px);
 }
@@ -312,6 +312,12 @@ table input {
   border-radius: 8px;
   height: 40px;
   width: 60px;
+}
+
+.search__result {
+  width: 100%;
+  margin: 30px 0px;
+  font-size: 18px;
 }
 
 .page-link {
