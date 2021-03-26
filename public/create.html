@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-  <title>Thêm mới học viên</title>
+  <title>Thêm mới hội viên</title>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
   <link rel="stylesheet" href="index.css">
@@ -17,12 +17,12 @@
           </div>
           <div class="modal-footer d-flex justify-content-center border-0">
             <button class="btn btn-success modal--back mr-4 invisible" type="button" data-dismiss="modal">Quay về trang chủ</button>
-            <button class="btn btn-info modal--continue invisible" type="button" data-dismiss="modal">Thêm học viên khác</button>
+            <button class="btn btn-info modal--continue invisible" type="button" data-dismiss="modal">Thêm hội viên khác</button>
           </div>
         </div>
       </div>
     </div>
-    <h1 class="text-center"> <a href="create.html">Thêm mới học viên</a></h1>
+    <h1 class="text-center"> <a href="create.html">Thêm mới hội viên</a></h1>
     <form class="main-form w-100" action="">
       <div class="form-group">
         <label for="input__name">Họ tên <span>*</span></label>
@@ -78,7 +78,7 @@
           }
         ).done(function() {
             $(".modal-text").html(`
-              Thêm học viên <span class="bold-font">${$("input")[0].value}</span> thành công!
+              Thêm hội viên <span class="bold-font">${$("input")[0].value}</span> thành công!
               <br>
               Bạn có muốn quay về trang chủ?`
             )
@@ -103,45 +103,6 @@
       $(".modal--back").click(() => {
         location.replace("index.html");
       })
-      
-      
     </script>
-    <!--
-    $("#save").click(() => {
-      $(".body-text").html(`
-      Thêm học viên mới ${$("input")[0].value} thành công!
-      <br>
-      Bạn có muốn quay về trang chủ?`
-      )
-    });
-    
-    $(".modal--back").click(() => {
-      location.replace("index.html");
-      $.post(
-        "https://changable-list-test.herokuapp.com/users",
-        {
-        "name": $("input")[0].value,
-        "birthday": $("input")[1].value,
-        "email": $("input")[2].value,
-        "phone": $("input")[3].value
-        }
-      );
-    });
-    
-    $(".modal--continue").click(() => {
-      $.post(
-        "https://changable-list-test.herokuapp.com/users",
-        {
-        "name": $("input")[0].value,
-        "birthday": $("input")[1].value,
-        "email": $("input")[2].value,
-        "phone": $("input")[3].value
-        }
-      );
-    });
-    
-    
-          
-    -->
   </div>
 </body>

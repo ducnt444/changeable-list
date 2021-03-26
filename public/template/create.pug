@@ -1,7 +1,7 @@
 
 doctype html
 head
-  title Thêm mới học viên
+  title Thêm mới hội viên
   
   link(rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous')
 
@@ -21,10 +21,10 @@ body
             
           .modal-footer.d-flex.justify-content-center.border-0
             button.btn.btn-success.modal--back.mr-4.invisible(type='button' data-dismiss='modal') Quay về trang chủ
-            button.btn.btn-info.modal--continue.invisible(type='button' data-dismiss='modal') Thêm học viên khác
+            button.btn.btn-info.modal--continue.invisible(type='button' data-dismiss='modal') Thêm hội viên khác
 
     h1.text-center 
-      a(href="create.html") Thêm mới học viên
+      a(href="create.html") Thêm mới hội viên
 
     form.main-form.w-100(action="")
       .form-group
@@ -97,7 +97,7 @@ body
           }
         ).done(function() {
             $(".modal-text").html(`
-              Thêm học viên <span class="bold-font">${$("input")[0].value}</span> thành công!
+              Thêm hội viên <span class="bold-font">${$("input")[0].value}</span> thành công!
               <br>
               Bạn có muốn quay về trang chủ?`
             )
@@ -122,41 +122,3 @@ body
       $(".modal--back").click(() => {
         location.replace("index.html");
       })
-
-
-    //
-      $("#save").click(() => {
-        $(".body-text").html(`
-        Thêm học viên mới ${$("input")[0].value} thành công!
-        <br>
-        Bạn có muốn quay về trang chủ?`
-        )
-      });
-
-      $(".modal--back").click(() => {
-        location.replace("index.html");
-        $.post(
-          "https://changable-list-test.herokuapp.com/users",
-          {
-          "name": $("input")[0].value,
-          "birthday": $("input")[1].value,
-          "email": $("input")[2].value,
-          "phone": $("input")[3].value
-          }
-        );
-      });
-
-      $(".modal--continue").click(() => {
-        $.post(
-          "https://changable-list-test.herokuapp.com/users",
-          {
-          "name": $("input")[0].value,
-          "birthday": $("input")[1].value,
-          "email": $("input")[2].value,
-          "phone": $("input")[3].value
-          }
-        );
-      });
-
-
-            

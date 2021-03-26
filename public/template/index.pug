@@ -16,6 +16,7 @@ body
     p.loading__text Vui lòng đợi trong giây lát
 
   .page-wrapper.container.flex-column.justify-content-center.align-items-center.mt-5.px-0 
+
     #index__modal.modal.fade
       .modal-dialog
         .modal-content
@@ -27,51 +28,54 @@ body
             a.btn.btn-success.modal--success(data-dismiss='modal') Xác nhận
             a.btn.btn-secondary.modal--cancel.ml-4(data-dismiss='modal') Hủy bỏ
 
+    #choose-page__modal.modal.fade
+      .modal-dialog.modal-dialog-centered.modal-sm
+        .modal-content
+
+          .modal-body
+            p.choose-page__text.text-center Nhập số trang
+            input.choose-page__input.d-block.mx-auto.mt-3(type="number")
+
+          .modal-footer.d-flex.justify-content-center
+            a.btn.btn-success.choose-page__confirm(data-dismiss='modal') Xác nhận
+            a.btn.btn-secondary.choose-page__cancel.ml-3(data-dismiss='modal') Hủy bỏ
+
     h1.text-center 
-      a(href="index.html") Danh sách học viên
+      a(href="index.html") Danh sách hội viên
 
     form.search-area(action="")
       input.form-control.search-input(type='text' placeholder='Tìm theo tên, năm sinh...')
         
-      button.search-submit.btn.btn-outline-dark(type="submit") 
+      button.search-submit.btn.btn-outline-dark(type="button") 
         i.fas.fa-search
 
-    .buttons-wrapper.d-flex.justify-content-between.w-100 
+    .buttons-wrapper.d-flex.justify-content-center.w-100 
       a.bg-danger.align-self-start.btn.btn--delete-selected.my-4.disabled(data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false")
         span.text-light
           i.fas.fa-trash-alt.mr-2
         span.text-light.ml-2 Xóa các mục được chọn
-      
+
+      .custom-pagination.d-flex.justify-content-between.align-items-center.mx-auto 
+        button.custom-pagination__item.btn.first-page
+          i.fas.fa-angle-double-left
+
+        button.custom-pagination__item.btn.prev-page
+          i.fas.fa-angle-left
+          
+        p.custom-pagination__display-text
+
+        button.custom-pagination__item.btn.next-page
+          i.fas.fa-angle-right
+
+        button.custom-pagination__item.btn.last-page
+          i.fas.fa-angle-double-right
+
       a.bg-success.align-self-start.btn.btn--add.my-4(href="create.html")
         span.text-light 
           i.fas.fa-plus-circle
-        span.text-light.ml-2 Thêm học viên 
+        span.text-light.ml-2 Thêm hội viên
 
-    ul.pagination
-      li.page-item.btn.first-page
-        a.page-link
-          i.fas.fa-angle-double-left
-      li.page-item.btn.prev-page
-        a.page-link
-          i.fas.fa-angle-left
-      li.page-item.btn.active
-        a.page-link 1      
-      li.page-item.btn
-        a.page-link 2
-      li.page-item.btn
-        a.page-link 3
-      li.page-item.btn
-        a.page-link 4
-      li.page-item.btn
-        a.page-link ...
-      li.page-item.btn.next-page
-        a.page-link 
-          i.fas.fa-angle-right
-      li.page-item.btn.last-page
-        a.page-link
-          i.fas.fa-angle-double-right
-
-    table.table.table-striped.my-4
+    table.table.table-striped.mb-4
       thead.thead-dark
         tr.table-head
           th 
@@ -101,7 +105,7 @@ body
       li.page-item
         a.page-link 4
       li.page-item
-        a.page-link ...
+        button.page-link.choose-page-btn(type="button" data-toggle="modal" data-target="#choose-page__modal" data-backdrop="static" data-keyboard="false") ...
       li.page-item.next-page
         a.page-link 
           i.fas.fa-angle-right

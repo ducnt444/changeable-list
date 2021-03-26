@@ -25,19 +25,26 @@
     <h1 class="text-center"> <a href="edit.html">Chỉnh sửa thông tin</a></h1>
     <form class="main-form w-100" action="">
       <div class="form-group">
-        <label for="name">Họ tên <span>*</span></label>
+        <label for="input__name">Họ tên <span>*</span></label>
         <input id="input__name" type="text">
       </div>
       <div class="form-group"> 
-        <label for="name">Năm sinh </label>
-        <input id="input__dob" type="text">
+        <label for="input__birthday">Năm sinh </label>
+        <input id="input__birthday" type="text">
       </div>
       <div class="form-group"> 
-        <label for="name">Email <span>*</span></label>
+        <label for="">Giới tính</label>
+        <label class="gender-label" for="input__gender--male">Nam</label>
+        <input class="gender-input" id="input__gender--male" type="radio" name="gender" value="Nam">
+        <label class="gender-label" for="input__gender--female">Nữ</label>
+        <input class="gender-input" id="input__gender--female" type="radio" name="gender" value="Nữ">
+      </div>
+      <div class="form-group"> 
+        <label for="input__email">Email <span>*</span></label>
         <input id="input__email" type="text">
       </div>
       <div class="form-group"> 
-        <label for="name">Phone <span>*</span></label>
+        <label for="input__phone">Phone <span>*</span></label>
         <input id="input__phone" type="text">
       </div>
       <div class="form-group d-flex justify-content-center align-items-center"><a class="btn btn--back bg-secondary d-flex justify-content-center align-items-center text-light" href="index.html"><span class="mr-2"><i class="fas fa-angle-left"></i></span><span>Quay lại </span></a>
@@ -55,26 +62,42 @@
         `https://changable-list-test.herokuapp.com/users/${userID}`,
         function(data) {
           $("input")[0].value = data.name;
-          $("input")[1].value = data.birthday.substr(-4);
-          $("input")[2].value = data.email;
-          $("input")[3].value = data.phone;
+          $("input")[1].value = data.birthday;
+          if (data.gender == "Nam") {
+            $("#input__gender--male").prop("checked", true)
+          } else {
+            $("#input__gender--female").prop("checked", true)
+          }
+          $("input")[4].value = data.email;
+          $("input")[5].value = data.phone;
         }
       )
+      
+      let gender;
+      
+      $(".gender-input").click(() => {
+        if($("#input__gender--male").is(":checked")) {
+          gender = "Nam"
+        } else {
+          gender = "Nữ"
+        }
+      });
       
       $("#save").click(() => {
         $.ajax({
           type: "PUT",
           url: `https://changable-list-test.herokuapp.com/users/${userID}`,
           data: {
-            name: `${$("input")[0].value}`,
-            birthday: `${$("input")[1].value}`,
-            email: `${$("input")[2].value}`,
-            phone: `${$("input")[3].value}`
-           },
+            "name": $("input")[0].value,
+            "birthday": $("input")[1].value,
+            "gender": gender,
+            "email": $("input")[4].value,
+            "phone": $("input")[5].value
+          },
           //data: `name=${$("input")[0].value}&birthday=${$("input")[1].value}&email=${$("input")[2].value}&phone=${$("input")[3].value}`,
           success: function() {
             $(".body-text").html(`
-              Cập nhật học viên <span class="bold-font">${$("input")[0].value}</span> thành công!
+              Cập nhật hội viên <span class="bold-font">${$("input")[0].value}</span> thành công!
               <br>
               Bạn có muốn quay về trang chủ?`
             )

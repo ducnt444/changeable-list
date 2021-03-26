@@ -7,7 +7,7 @@
 Shorthand cho URL của users database /users 
 let usersURL = "https://changable-list-test.herokuapp.com/users"
 
-Xác định id học viên nào được click
+Xác định id hội viên nào được click
 let targetId = "";
 
 Xác định pagination hiện tại. Khởi điểm sẽ = 1 để load trang.
@@ -80,10 +80,11 @@ $.get(
       usersQuantity = data.length;
       pagesQuantity = Math.ceil(usersQuantity/10)
 
+      $(".custom-pagination__display-text").text(`1 - ${currentLimit} / ${usersQuantity} hội viên`)
+
       console.log("Total users: " + usersQuantity)
       console.log("Total pages: " + pagesQuantity)
-      console.log("Current page: " + currentPage)
-      
+      console.log(`Current page: ${currentPage}/${pagesQuantity}`)
     }
   )
 
@@ -102,24 +103,25 @@ $("tbody").on('click', '.btn--delete', function() {
 
     //nội dung .modal__text thay đổi
     $("#index__modal .modal__text").html(
-      `Bạn có muốn xóa học viên <span class="bold-font">${$(this)
+      `Bạn có muốn xóa hội viên <span class="bold-font">${$(this)
         .parents("tr")
         .children("td:nth-child(2)")
         .text()}</span> ?`
     );
 
-    //update id học viên đang được chọn để xóa đơn
+    //update id hội viên đang được chọn để xóa đơn
     targetId = this.parentElement.parentElement.id.slice(4);
 });
 
-//2. Event "click confirm xóa đơn": Xóa học viên trên table và database
+//2. Event "click confirm xóa đơn": Xóa hội viên trên table và database
 $("#index__modal").on('click', '.modal--success.delete--single', function() {
   $.ajax({
     url: `${usersURL}/${targetId}`,
     type: "DELETE",
     success: () => {
       //item:id này đã được setup làm id cho từng tr khi load trang
-      $(`#item${targetId}`).detach()
+      $(`#item${targetId}`).detach();
+      usersQuantity--;
     }
   })
 });
@@ -197,26 +199,101 @@ $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
   //Tạo 1 array chứa các thẻ tr đang có input được check
   let itemArr = $("tbody tr").has("input:checked").toArray();
 
-  //loop: mỗi tr trong array trên sẽ:
+  //loop: mỗi tr trong array "bị xóa" sẽ:
   for (let i = 0; i < itemArr.length; i++) {
 
-    //update targetid
+    //lấy ra targetid của tr này
     targetId = itemArr[i].id.slice(4);
 
-    //xóa dòng này
+    //xóa tr này trên giao diện
     $(`#item${targetId}`).detach();
 
-    //xóa item trên database
+    //dựa theo targetid lấy được, xóa item tương ứng trên database
     $.ajax({
       url: `${usersURL}/${targetId}`,
       type: "DELETE",
     });
   }
 
-  //xóa nhiều xong thì bỏ check nút check tổng
+  //update usersQuantity
+  usersQuantity -= itemArr.length
+
+  //sau khi xóa nhiều xong thì bỏ check nút check tổng
   if ($("thead input").is(":checked")) {
     $("thead input")[0].checked = false;
   }
+})
+
+
+
+
+/* ------------------------------------------------------------------------------------------
+ search mode 
+------------------------------------------------------------------------------------------ */
+
+
+
+
+//hiệu ứng
+$(".search-input").focusin(() => {
+  $(".input-group").css("border-color", "black")
+})
+
+$(".search-input").focusout(() => {
+  $(".input-group").css("border-color", "#bbbbbb")
+})
+
+  
+  
+//Khi click nút search
+
+$(".search-submit").click(() => {
+
+  //khởi động chế độ search
+  isSearching = true;
+
+  //lấy giá trị input search
+  let searchInput = $(".search-input").val()
+
+  //loading: on
+  $(".loading-wrapper").css("display", "block");
+
+  //GET từ input search, mode: search
+  $.get(
+    `${usersURL}?q=${searchInput}&_page=${currentPage}&_limit=10&_sort=id&_order=desc`
+  ).done(
+    function(data) {
+      let content = "";
+
+      for ( let i = 0; i < data.length; i++) {
+        content += rowTemplate(data, i)
+      }
+
+      $("tbody").html(content);
+
+      //loading: off
+      $(".loading-wrapper").css("display", "none");
+      
+      //update data khả dụng trong chế độ search
+
+      usersQuantity = data.length; //số lượng users trở thành số lượng users phù hợp search route
+
+      currentPage = 1; //số trang hiện tại trở về 1
+
+      //update pagination
+      currentMaxUsers = currentPage * currentLimit; 
+
+      if (currentMaxUsers > usersQuantity) {
+        currentMaxUsers = usersQuantity;
+      }
+
+      $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`)
+
+      console.log(usersQuantity)
+      console.log(currentPage)
+
+    }
+  )
 })
 
 
@@ -225,62 +302,48 @@ $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
  pagination 
 ------------------------------------------------------------------------------------------ */ 
 
+//update disabled/allow của các nút điều hướng trang
+
+
+
 //bấm nút prev: sẽ nhảy về trang ?_page= (currentPage - 1) &_limit=10&_sort=id&_order=desc 
 $(".prev-page").click(() => {
-  $(".loading-wrapper").css("display", "block");
-  if (currentPage > 0) {
-    
+
+  //Điều kiện cho phép click nút prev: page hiện tại phải lớn hơn 1 (1 không thể prev về 0)
+  if (currentPage > 1) { 
+
+    //loading screen
+    $(".loading-wrapper").css("display", "block");
+
+    //lấy data từ db: page trước đó (điều kiện vẫn như cũ)
     $.get(
       `${usersURL}?_page=${currentPage - 1}&_limit=10&_sort=id&_order=desc`
-    ).done(
+    ).done( 
+      //sau đó render lại bảng theo data lấy được
       function(data) {
-  
-        for (let i = 0; i < 10; i++) {
-          if (data[i] == undefined) {
-            $(`.row${i + 1}`).detach()
+        let content = "";
 
-          } else if ( $("tbody tr")[i] == undefined ) {
-            $("tbody").append(`<tr id = "item${data[i].id}" class = "row${i + 1}">
-            <td>
-              <div class="checkbox-wrapper">
-                <input type="checkbox">
-              </div>
-            </td>
-            <td>${data[i].name}</td>
-            <td>${data[i].birthday}</td>
-            <td>${data[i].gender}</td>
-            <td>${data[i].email}</td>
-            <td>${data[i].phone}</td>
-            <td>
-            <a class="btn btn--edit text-primary" href="edit.html?${data[i].id}">
-              <span> <i class="far fa-edit"></i> </span>
-              <span class="ml-2">Chỉnh sửa</span>
-              <span class="ml-3">|</span>
-            </a>
-            <button class="btn btn--delete text-danger pl-0" data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false">
-              <span> <i class="fas fa-trash-alt"></i> </span>
-              <span class="ml-2">Xóa</span>
-            </button>
-            </td>
-          </tr>`)
-            console.log(data[i])
-
-          } else {
-            console.log($("btn--edit"))
-            /* $("btn--edit")[i].href = `edit.html?${data[i].id}` */
-            $("tbody tr")[i].id = `item${data[i].id}`;
-            $("tbody tr")[i].children[1].innerText = data[i].name;
-            $("tbody tr")[i].children[2].innerText = data[i].birthday;
-            $("tbody tr")[i].children[3].innerText = data[i].gender;
-            $("tbody tr")[i].children[4].innerText = data[i].email;
-            $("tbody tr")[i].children[5].innerText = data[i].phone;
-          }
+        for ( let i = 0; i < data.length; i++) {
+          content += rowTemplate(data, i)
         }
-  
+
+        $("tbody").html(content);
+
         $(".loading-wrapper").css("display", "none");  
-  
+
+
         currentPage--;
-        console.log("Current page: " + currentPage);
+        currentMaxUsers = currentPage * currentLimit;
+
+        if (currentMaxUsers > usersQuantity) {
+          currentMaxUsers = usersQuantity;
+        }
+
+        $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`)
+
+        $(".page-item").removeClass("active")
+
+        console.log(`Current page: ${currentPage}/${pagesQuantity}`)
       }
     )
   }
@@ -289,77 +352,159 @@ $(".prev-page").click(() => {
 
 //bấm nút next: sẽ nhảy sang trang ?_page= (currentPage + 1) &_limit=10&_sort=id&_order=desc 
 $(".next-page").click(() => {
-  $(".loading-wrapper").css("display", "block");
 
-  if (currentPage < pagesQuantity) { //VD page 50 / 51 thì mới cho phép next
+  //Điều kiện cho phép click nút next: page hiện tại < tổng số pages
+  if (currentPage < pagesQuantity) { 
+
+    //loading screen
+    $(".loading-wrapper").css("display", "block");
+
+    //lấy data từ db: page tiếp theo (điều kiện vẫn như cũ)
     $.get(
       `${usersURL}?_page=${currentPage + 1}&_limit=10&_sort=id&_order=desc`
-    ).done(
+    ).done( 
+      //sau đó render lại bảng theo data lấy được
       function(data) {
         let content = "";
-        
+
         for ( let i = 0; i < data.length; i++) {
           content += rowTemplate(data, i)
         }
 
-        $("tbody").html(content)
+        $("tbody").html(content);
 
         $(".loading-wrapper").css("display", "none");  
-  
+
         currentPage++;
-        console.log("Current page: " + currentPage)
+        currentMaxUsers = currentPage * currentLimit;
+
+        if (currentMaxUsers > usersQuantity) {
+          currentMaxUsers = usersQuantity;
+        }
+
+        $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`)
+
+        console.log(`Current page: ${currentPage}/${pagesQuantity}`)
+
+
       }
     )
   }
-
 })
 
 
-//bấm nút last: sẽ nhảy sang trang ?_page= (pagesQuantity) &_limit=10 
+//bấm nút first: sẽ nhảy về trang ?_page= (1) &_limit=10&_sort=id&_order=desc  
+$(".first-page").click(() => {
+
+  //Điều kiện cho phép click nút last: page hiện tại > 1 (page 1 không thể về first)
+  if (currentPage > 1) { 
+
+    //loading screen
+    $(".loading-wrapper").css("display", "block");
+
+    //lấy data từ db: page tiếp theo (điều kiện vẫn như cũ)
+    $.get(
+      `${usersURL}?_page=1&_limit=10&_sort=id&_order=desc`
+    ).done( 
+      //sau đó render lại bảng theo data lấy được
+      function(data) {
+        let content = "";
+
+        for ( let i = 0; i < data.length; i++) {
+          content += rowTemplate(data, i)
+        }
+
+        $("tbody").html(content);
+
+        $(".loading-wrapper").css("display", "none");  
+
+        currentPage = 1;
+        currentMaxUsers = currentPage * currentLimit;
+        
+        if (currentMaxUsers > usersQuantity) {
+          currentMaxUsers = usersQuantity;
+        }
+
+        $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`)
+        
+        console.log(`Current page: ${currentPage}/${pagesQuantity}`)
+      }
+    )
+  } else {
+
+  }
+})
+
+//bấm nút last: sẽ nhảy sang trang ?_page= (pagesQuantity) &_limit=10&_sort=id&_order=desc  
 $(".last-page").click(() => {
+
+  //Điều kiện cho phép click nút last: page hiện tại < tổng số pages (page cuối không thể sang last)
+  if (currentPage < pagesQuantity) { 
+
+    //loading screen
+    $(".loading-wrapper").css("display", "block");
+
+    //lấy data từ db: page tiếp theo (điều kiện vẫn như cũ)
+    $.get(
+      `${usersURL}?_page=${pagesQuantity}&_limit=10&_sort=id&_order=desc`
+    ).done( 
+      //sau đó render lại bảng theo data lấy được
+      function(data) {
+        let content = "";
+
+        for ( let i = 0; i < data.length; i++) {
+          content += rowTemplate(data, i)
+        }
+
+        $("tbody").html(content);
+
+        $(".loading-wrapper").css("display", "none");  
+
+        currentPage = pagesQuantity;
+        currentMaxUsers = currentPage * currentLimit;
+
+        if (currentMaxUsers > usersQuantity) {
+          currentMaxUsers = usersQuantity;
+        }
+
+        $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`)
+
+        console.log(`Current page: ${currentPage}/${pagesQuantity}`)
+      }
+    )
+  }
+})
+
+//nút chuyển sang trang tùy chọn
+
+$(".choose-page__confirm").click(() => {
+
+  let choosePageNum = +$(".choose-page__input").val()
+
   $(".loading-wrapper").css("display", "block");
 
+  
   $.get(
-    `${usersURL}?_page=${pagesQuantity}&_limit=10&_limit=10&_sort=id&_order=desc`
+    `${usersURL}?_page=${choosePageNum}&_limit=10&_sort=id&_order=desc`
   ).done(
     function(data) {
+      let content = "";
 
-      for (let i = 0; i < 10; i++) {
-        if (data[i] == undefined) {
-          $(`.row${i + 1}`).detach()
-        } else {
-          $("tbody tr")[i].id = `item${data[i].id}`;
-          $("tbody tr")[i].children[1].innerText = data[i].name;
-          $("tbody tr")[i].children[2].innerText = data[i].birthday;
-          $("tbody tr")[i].children[3].innerText = data[i].gender;
-          $("tbody tr")[i].children[4].innerText = data[i].email;
-          $("tbody tr")[i].children[5].innerText = data[i].phone;
-        }
+      for ( let i = 0; i < data.length; i++) {
+        content += rowTemplate(data, i)
       }
+
+      $("tbody").html(content);
 
       $(".loading-wrapper").css("display", "none");  
 
-      currentPage = pagesQuantity;
-      console.log("Current page: " + currentPage)
+      currentPage = choosePageNum;
+      currentMaxUsers = currentPage * currentLimit;
+
+      $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`)
+
+      console.log(`Current page: ${currentPage}/${pagesQuantity}`)
     }
   )
 })
-
-
-
-
-
-
-/* ------------------------------------------------------------------------------------------
- search area 
------------------------------------------------------------------------------------------- */
-
-/* $(".search-input").focusin(() => {
-  $(".input-group").css("border-color", "black")
-})
-
-$(".search-input").focusout(() => {
-  $(".input-group").css("border-color", "#bbbbbb")
-}) */
-
 

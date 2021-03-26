@@ -21,24 +21,32 @@
         </div>
       </div>
     </div>
-    <h1 class="text-center"> <a href="index.html">Danh sách học viên</a></h1>
+    <div class="modal fade" id="choose-page__modal">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+          <div class="modal-body">
+            <p class="choose-page__text text-center">Nhập số trang</p>
+            <input class="choose-page__input d-block mx-auto mt-3" type="number">
+          </div>
+          <div class="modal-footer d-flex justify-content-center"><a class="btn btn-success choose-page__confirm" data-dismiss="modal">Xác nhận</a><a class="btn btn-secondary choose-page__cancel ml-3" data-dismiss="modal">Hủy bỏ</a></div>
+        </div>
+      </div>
+    </div>
+    <h1 class="text-center"> <a href="index.html">Danh sách hội viên</a></h1>
     <form class="search-area" action="">
       <input class="form-control search-input" type="text" placeholder="Tìm theo tên, năm sinh...">
-      <button class="search-submit btn btn-outline-dark" type="submit"> <i class="fas fa-search"></i></button>
+      <button class="search-submit btn btn-outline-dark" type="button"> <i class="fas fa-search"></i></button>
     </form>
-    <div class="buttons-wrapper d-flex justify-content-between w-100"> <a class="bg-danger align-self-start btn btn--delete-selected my-4 disabled" data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false"><span class="text-light"><i class="fas fa-trash-alt mr-2"></i></span><span class="text-light ml-2">Xóa các mục được chọn</span></a><a class="bg-success align-self-start btn btn--add my-4" href="create.html"><span class="text-light"> <i class="fas fa-plus-circle"></i></span><span class="text-light ml-2">Thêm học viên </span></a></div>
-    <ul class="pagination">
-      <li class="page-item btn first-page"><a class="page-link"><i class="fas fa-angle-double-left"></i></a></li>
-      <li class="page-item btn prev-page"><a class="page-link"><i class="fas fa-angle-left"></i></a></li>
-      <li class="page-item btn active"><a class="page-link">1      </a></li>
-      <li class="page-item btn"><a class="page-link">2</a></li>
-      <li class="page-item btn"><a class="page-link">3</a></li>
-      <li class="page-item btn"><a class="page-link">4</a></li>
-      <li class="page-item btn"><a class="page-link">...</a></li>
-      <li class="page-item btn next-page"><a class="page-link"> <i class="fas fa-angle-right"></i></a></li>
-      <li class="page-item btn last-page"><a class="page-link"><i class="fas fa-angle-double-right"></i></a></li>
-    </ul>
-    <table class="table table-striped my-4">
+    <div class="buttons-wrapper d-flex justify-content-center w-100"> <a class="bg-danger align-self-start btn btn--delete-selected my-4 disabled" data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false"><span class="text-light"><i class="fas fa-trash-alt mr-2"></i></span><span class="text-light ml-2">Xóa các mục được chọn</span></a>
+      <div class="custom-pagination d-flex justify-content-between align-items-center mx-auto"> 
+        <button class="custom-pagination__item btn first-page"><i class="fas fa-angle-double-left"></i></button>
+        <button class="custom-pagination__item btn prev-page"><i class="fas fa-angle-left"></i></button>
+        <p class="custom-pagination__display-text"></p>
+        <button class="custom-pagination__item btn next-page"><i class="fas fa-angle-right"></i></button>
+        <button class="custom-pagination__item btn last-page"><i class="fas fa-angle-double-right"></i></button>
+      </div><a class="bg-success align-self-start btn btn--add my-4" href="create.html"><span class="text-light"> <i class="fas fa-plus-circle"></i></span><span class="text-light ml-2">Thêm hội viên</span></a>
+    </div>
+    <table class="table table-striped mb-4">
       <thead class="thead-dark">
         <tr class="table-head">
           <th> 
@@ -61,7 +69,9 @@
       <li class="page-item"><a class="page-link">2</a></li>
       <li class="page-item"><a class="page-link">3</a></li>
       <li class="page-item"><a class="page-link">4</a></li>
-      <li class="page-item"><a class="page-link">...</a></li>
+      <li class="page-item">
+        <button class="page-link choose-page-btn" type="button" data-toggle="modal" data-target="#choose-page__modal" data-backdrop="static" data-keyboard="false">...</button>
+      </li>
       <li class="page-item next-page"><a class="page-link"> <i class="fas fa-angle-right"></i></a></li>
       <li class="page-item last-page"><a class="page-link"><i class="fas fa-angle-double-right"></i></a></li>
     </ul>

@@ -6,11 +6,11 @@
 //Shorthand cho URL của users database /users 
 let usersURL = "https://changable-list-test.herokuapp.com/users"
 
-//Xác định id học viên nào được click
+//Xác định id hội viên nào được click
 let targetId = "";
 
 //Xác định pagination hiện tại. Khởi điểm sẽ = 1 để load trang. 
-let currentPage = 1; //(là NUMBER)
+let currentPage = 1; //là NUMBER
 
 //Xác định độ dài của mỗi page. Mặc định sẽ là 10 users
 let currentLimit = "10";
@@ -20,6 +20,20 @@ let usersQuantity; //(là NUMBER)
 
 //Xác định số lượng trang hiện tại (usersQuantity/10)
 let pagesQuantity; //(là NUMBER)
+
+//Xác định số hội viên max
+let currentMaxUsers = currentPage * currentLimit; //(là NUMBER)
+
+//Xác định các chế độ để update GET URL tương ứng khi pagination
+
+let isSearching = false //có đang trong mode search không, default là không
+
+let isOldFirst = false //có đang trong mode sắp xếp item cũ nhất lên trước không, default là không
+
+$(".currentPageElement").change(() => {
+  console.log(`Current pageElementCounter changed`)
+});
+
 
 /* Xác định template cho 1 tr:
 Sẽ là 1 function, nhận vào 2 tham số: dataFromServer (truyền data vào) và loopIndicator (truyền i của loop vào)
