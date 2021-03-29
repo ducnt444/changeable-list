@@ -3,8 +3,12 @@
  setup global
 ------------------------------------------------------------------------------------------ */
 
-//Shorthand cho URL của users database /users 
+//Shorthand cho URL của users và URL users (sorted)
 let usersURL = "https://changable-list-test.herokuapp.com/users"
+let usersURLSorted = "&_sort=id&_order=desc"
+
+//Tạo bản sao data
+let users;
 
 //Xác định id hội viên nào được click
 let targetId = "";
@@ -26,21 +30,16 @@ let currentMaxUsers = currentPage * currentLimit; //(là NUMBER)
 
 //Xác định các chế độ để update GET URL tương ứng khi pagination
 
-let isSearching = false //có đang trong mode search không, default là không
+let isSearching = false //có đang trong mode search không, default là không (nếu đang search mode == true, load trang sẽ bỏ search mode)
 
 let isOldFirst = false //có đang trong mode sắp xếp item cũ nhất lên trước không, default là không
-
-$(".currentPageElement").change(() => {
-  console.log(`Current pageElementCounter changed`)
-});
-
 
 /* Xác định template cho 1 tr:
 Sẽ là 1 function, nhận vào 2 tham số: dataFromServer (truyền data vào) và loopIndicator (truyền i của loop vào)
 Sẽ return ra đoạn code dưới đây, với data và i được truyền vào tương ứng với mỗi lần gọi */
 function rowTemplate(dataFromServer, loopIndicator) {
   return `
-  <tr id = "item${dataFromServer[loopIndicator].id}" class = "row${loopIndicator + 1}">
+  <tr id = "item${dataFromServer[loopIndicator].id}">
     <td>
       <div class="checkbox-wrapper">
         <input type="checkbox">
@@ -65,3 +64,94 @@ function rowTemplate(dataFromServer, loopIndicator) {
   </tr>`
 }
 
+//update currentMaxUsers
+function updateCurrentMaxUsers() {
+  currentMaxUsers = currentPage * currentLimit;
+
+  if (currentMaxUsers > usersQuantity) {
+    currentMaxUsers = usersQuantity;
+  }
+
+  $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`);
+}
+
+//render next / prev page
+function renderNextPrev() {
+  let content = "";
+
+  for (let i = (currentPage * 10 - 10); i < (currentPage * 10) && i < usersQuantity; i++) {
+    content += rowTemplate(users, i);
+  }
+
+  $("tbody").html(content);
+
+  console.log(`Current page: ${currentPage}/${pagesQuantity}`);
+}
+
+//render first page
+function renderFirstPage() {
+  let content = "";
+
+  for ( let i = 0; i < 10; i++) {
+    content += rowTemplate(users, i)
+  }
+
+  $("tbody").html(content);
+}
+
+//render last page
+function renderLastPage() {
+  let content = "";
+
+  for ( let i = (pagesQuantity * 10 - 10); i < (pagesQuantity * 10 - 1) && i < (usersQuantity); i++) {
+    content += rowTemplate(users, i)
+  }
+
+  $("tbody").html(content);
+
+  console.log(`Current page: ${currentPage}/${pagesQuantity}`);
+}
+
+//clone database
+function cloneDatabase() {
+  $.get(
+    `${usersURL}?${usersURLSorted}`
+  ).done( (data) => {
+      
+    }
+  )
+}
+
+
+//load trang
+function loadFirstPageFullData() {
+  $.get(
+    `${usersURL}?${usersURLSorted}`
+    ).done(function (data) {
+      //clone data
+      users = data;
+  
+      //update số lượng users
+      usersQuantity = users.length;
+  
+      //update số lượng pages
+      pagesQuantity = Math.ceil(usersQuantity / 10);
+  
+      //update custom pagination
+      $(".custom-pagination__display-text").text(
+        `1 - ${currentLimit} / ${usersQuantity} hội viên`
+      );
+      
+      //update table (page 1)
+      renderFirstPage()
+  
+      $(".loading-wrapper").css("display", "none");
+      $(".page-wrapper").css("display", "flex");
+  
+      //check
+      console.log("Total users: " + usersQuantity);
+      console.log("Total pages: " + pagesQuantity);
+      console.log(`Current page: ${currentPage}/${pagesQuantity}`);
+    }
+  );
+}

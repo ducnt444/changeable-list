@@ -3,31 +3,34 @@
  setup global (đã được declare trong script.js dùng chung cho mọi trang)
 ------------------------------------------------------------------------------------------ */
 /*
-
-Shorthand cho URL của users database /users 
+//Shorthand cho URL của users và URL users (sorted)
 let usersURL = "https://changable-list-test.herokuapp.com/users"
+let usersURLSorted = "&_sort=id&_order=desc"
 
-Xác định id hội viên nào được click
+//Tạo bản sao data
+let users;
+
+//Xác định id hội viên nào được click
 let targetId = "";
 
-Xác định pagination hiện tại. Khởi điểm sẽ = 1 để load trang.
-let currentPage = 1; (là NUMBER)
+//Xác định pagination hiện tại. Khởi điểm sẽ = 1 để load trang. 
+let currentPage = 1; //là NUMBER
 
-Xác định độ dài của mỗi page. Mặc định sẽ là 10 users
+//Xác định độ dài của mỗi page. Mặc định sẽ là 10 users
 let currentLimit = "10";
 
-Xác định số lượng users hiện tại có trên database, sẽ update mỗi khi có tương tác đến số lượng user (DELETE, POST)
-let usersQuantity; (là NUMBER)
+//Xác định số lượng users hiện tại có trên database, sẽ update mỗi khi có tương tác đến số lượng user (DELETE, POST)
+let usersQuantity; //(là NUMBER)
 
-Xác định số lượng trang hiện tại (usersQuantity/10)
+//Xác định số lượng trang hiện tại (usersQuantity/10)
 let pagesQuantity; //(là NUMBER)
 
-Xác định số hội viên max
+//Xác định số hội viên max
 let currentMaxUsers = currentPage * currentLimit; //(là NUMBER)
 
-Xác định các chế độ để update GET URL tương ứng khi pagination
+//Xác định các chế độ để update GET URL tương ứng khi pagination
 
-let isSearching = false //có đang trong mode search không, default là không
+let isSearching = false //có đang trong mode search không, default là không (nếu đang search mode == true, load trang sẽ bỏ search mode)
 
 let isOldFirst = false //có đang trong mode sắp xếp item cũ nhất lên trước không, default là không
 */
@@ -37,38 +40,7 @@ let isOldFirst = false //có đang trong mode sắp xếp item cũ nhất lên t
 ------------------------------------------------------------------------------------------ */
 
 //1. get data (số lượng, info...)
-$.get(
-  usersURL
-  ).done(function (data) {
-    //update số lượng users
-    usersQuantity = data.length;
-
-    //update số lượng pages
-    pagesQuantity = Math.ceil(usersQuantity / 10);
-
-    //update custom pagination
-    $(".custom-pagination__display-text").text(
-      `1 - ${currentLimit} / ${usersQuantity} hội viên`
-    );
-    
-    //update table (page 1)
-    let content = "";
-    for (let i = 0; i < 10; i++) {
-      content += rowTemplate(data, i);
-    }
-    $("tbody").html(content);
-
-    $(".loading-wrapper").css("display", "none");
-    $(".page-wrapper").css("display", "flex");
-
-    //check
-    console.log("Total users: " + usersQuantity);
-    console.log("Total pages: " + pagesQuantity);
-    console.log(`Current page: ${currentPage}/${pagesQuantity}`);
-  }
-);
-
-
+loadFirstPageFullData()
 
 /* ------------------------------------------------------------------------------------------
  "xóa đơn" toggler
@@ -77,7 +49,7 @@ $.get(
 //1. Event "click nút xóa đơn": toggle và update modal confirm
 $("tbody").on('click', '.btn--delete', function() { 
   
-    //nút xác nhận đổi sang chế độ "xác nhận xóa đơn"
+    //nút xác nhận: đổi sang chế độ "xác nhận xóa đơn"
     $("#index__modal .modal--success").addClass("delete--single");
 
     //nút cancel được hiển thị 
@@ -101,9 +73,30 @@ $("#index__modal").on('click', '.modal--success.delete--single', function() {
     url: `${usersURL}/${targetId}`,
     type: "DELETE",
     success: () => {
-      //item:id này đã được setup làm id cho từng tr khi load trang
-      $(`#item${targetId}`).detach();
-      usersQuantity--;
+      $.get(
+        /* `${usersURL}?${usersURLSorted}&_page=${currentPage}&_limit=${currentLimit}` */
+        `${usersURL}?${usersURLSorted}&_page=${currentPage}&_limit=${currentLimit}`
+      ).done((data) => {
+          //clone data
+          users = data;
+      
+          //update custom pagination
+          $(".custom-pagination__display-text").text(
+            `1 - ${currentLimit} / ${usersQuantity} hội viên`
+          );
+          
+          //update table (page 1)
+          renderFirstPage()
+      
+          $(".loading-wrapper").css("display", "none");
+          $(".page-wrapper").css("display", "flex");
+      
+          //check
+          console.log("Total users: " + usersQuantity);
+          console.log("Total pages: " + pagesQuantity);
+          console.log(`Current page: ${currentPage}/${pagesQuantity}`);
+        }
+      )
     }
   })
 });
@@ -114,7 +107,7 @@ $("#index__modal").on('click', '.modal--success.delete--single', function() {
  nút toggler chọn check tất cả 
 ------------------------------------------------------------------------------------------ */
 
-//Event: khi bất kỳ thẻ input nào của thead (a.k.a checkbox tổng) có thay đổi
+//Event: khi "bất kỳ thẻ input nào của thead" (chính là checkbox tổng) có thay đổi
 $("thead").on('change', 'input', function() { 
 
   //check xem checkbox tổng có đang check không
@@ -213,7 +206,7 @@ $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
  search mode 
 ------------------------------------------------------------------------------------------ */
 
-//hiệu ứng
+//settings
 $(".search-input").focusin(() => {
   $(".input-group").css("border-color", "black")
 })
@@ -225,57 +218,51 @@ $(".search-input").focusout(() => {
 //Xác nhận giá trị input search
 let searchInput;
   
-
-//Khi click nút SEARCH
+//Event: Khi click nút SEARCH
 
 $(".search-submit").click(() => {
-
-  //khởi động chế độ search
-  isSearching = true;
-
-  //Update giá trị cho searchInput
-  searchInput = $(".search__input").val()
 
   //loading: on
   $(".loading-wrapper").css("display", "block");
 
-  //GET từ input search, mode: search
+  //Lấy giá trị input của search
+  searchInput = $(".search-input").val()
+
+  //Reset trang về 1
+  currentPage = 1;
+
+  //GET data mới từ input search, mode: search
   $.get(
-    `${usersURL}?q=${searchInput}&_page=${currentPage}&_limit=10&_sort=id&_order=desc`
+    //get toàn bộ user phù hợp search (bỏ _page và _limit, nhưng sau đó sẽ chỉ render 10 items đầu tiên)
+    `${usersURL}?q=${searchInput}&_sort=id&_order=desc`
   ).done(
     function(data) {
+      //clone data mới
+      users = data;
+
+      //render content (chỉ 10 items đầu)
+      renderFirstPage()
+
+      //Update bảng thông báo kết quả search
       $(".search__result").text(
         `Kết quả tìm kiếm cho "${searchInput}"`
       );
+      
+      //update data khả dụng trong chế độ search
+      usersQuantity = users.length; //số lượng users trở thành số lượng users phù hợp search route
 
-      let content = "";
+      //update số lượng pages
+      pagesQuantity = Math.ceil(usersQuantity / 10);
 
-      for ( let i = 0; i < data.length; i++) {
-        content += rowTemplate(data, i)
-      }
-
-      $("tbody").html(content);
+      //update pagination
+      updateCurrentMaxUsers()
 
       //loading: off
       $(".loading-wrapper").css("display", "none");
-      
-      //update data khả dụng trong chế độ search
 
-      usersQuantity = data.length; //số lượng users trở thành số lượng users phù hợp search route
-
-      currentPage = 1; //số trang hiện tại trở về 1
-
-      //update pagination
-      currentMaxUsers = currentPage * currentLimit; 
-
-      if (currentMaxUsers > usersQuantity) {
-        currentMaxUsers = usersQuantity;
-      }
-
-      $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`)
-
-      console.log(usersQuantity)
-      console.log(currentPage)
+      console.log(`Total users: ${usersQuantity}`);
+      console.log(`Current max users: ${currentMaxUsers}`);
+      console.log(`Current page: ${currentPage}/${pagesQuantity}`);
     }
   )
 })
@@ -296,82 +283,11 @@ $(".prev-page").click(() => {
   //Điều kiện cho phép click nút prev: page hiện tại phải lớn hơn 1 (1 không thể prev về 0)
   if (currentPage > 1) { 
 
-    //loading screen
-    $(".loading-wrapper").css("display", "block");
+    currentPage--;
 
-    if (isSearching == true) {
-      //lấy data từ db: page trước đó (điều kiện vẫn như cũ)
-      $.get(
-        `${usersURL}?q=${searchInput}&_page=${
-          currentPage - 1
-        }&_limit=10&_sort=id&_order=desc`
-      ).done(
-        //sau đó render lại bảng theo data lấy được
-        function (data) {
-          let content = "";
+    updateCurrentMaxUsers()
 
-          for (let i = 0; i < data.length; i++) {
-            content += rowTemplate(data, i);
-          }
-
-          $("tbody").html(content);
-
-          $(".loading-wrapper").css("display", "none");
-
-          currentPage--;
-          currentMaxUsers = currentPage * currentLimit;
-
-          if (currentMaxUsers > usersQuantity) {
-            currentMaxUsers = usersQuantity;
-          }
-
-          $(".custom-pagination__display-text").text(
-            `${
-              currentPage * currentLimit - currentLimit + 1
-            } - ${currentMaxUsers} / ${usersQuantity} hội viên`
-          );
-
-          $(".page-item").removeClass("active");
-
-          console.log(`Current page: ${currentPage}/${pagesQuantity}`);
-        }
-      );
-    } else {
-      //lấy data từ db: page trước đó (điều kiện vẫn như cũ)
-      $.get(
-        `${usersURL}?_page=${currentPage - 1}&_limit=10&_sort=id&_order=desc`
-      ).done(
-        //sau đó render lại bảng theo data lấy được
-        function (data) {
-          let content = "";
-
-          for (let i = 0; i < data.length; i++) {
-            content += rowTemplate(data, i);
-          }
-
-          $("tbody").html(content);
-
-          $(".loading-wrapper").css("display", "none");
-
-          currentPage--;
-          currentMaxUsers = currentPage * currentLimit;
-
-          if (currentMaxUsers > usersQuantity) {
-            currentMaxUsers = usersQuantity;
-          }
-
-          $(".custom-pagination__display-text").text(
-            `${
-              currentPage * currentLimit - currentLimit + 1
-            } - ${currentMaxUsers} / ${usersQuantity} hội viên`
-          );
-
-          $(".page-item").removeClass("active");
-
-          console.log(`Current page: ${currentPage}/${pagesQuantity}`);
-        }
-      );
-    }
+    renderNextPrev()
   }
 })
 
@@ -382,122 +298,40 @@ $(".next-page").click(() => {
   //Điều kiện cho phép click nút next: page hiện tại < tổng số pages
   if (currentPage < pagesQuantity) { 
 
-    //loading screen
-    $(".loading-wrapper").css("display", "block");
+    currentPage++;
 
-    //lấy data từ db: page tiếp theo (điều kiện vẫn như cũ)
-    $.get(
-      `${usersURL}?_page=${currentPage + 1}&_limit=10&_sort=id&_order=desc`
-    ).done( 
-      //sau đó render lại bảng theo data lấy được
-      function(data) {
-        let content = "";
+    updateCurrentMaxUsers()
 
-        for ( let i = 0; i < data.length; i++) {
-          content += rowTemplate(data, i)
-        }
-
-        $("tbody").html(content);
-
-        $(".loading-wrapper").css("display", "none");  
-
-        currentPage++;
-        currentMaxUsers = currentPage * currentLimit;
-
-        if (currentMaxUsers > usersQuantity) {
-          currentMaxUsers = usersQuantity;
-        }
-
-        $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`)
-
-        console.log(`Current page: ${currentPage}/${pagesQuantity}`)
-
-
-      }
-    )
+    renderNextPrev()
   }
 })
 
 
-//bấm nút FIRST: sẽ nhảy về trang ?_page= (1) &_limit=10&_sort=id&_order=desc  
+//bấm nút FIRST: nhảy về trang đầu tiên
 $(".first-page").click(() => {
 
   //Điều kiện cho phép click nút last: page hiện tại > 1 (page 1 không thể về first)
   if (currentPage > 1) { 
 
-    //loading screen
-    $(".loading-wrapper").css("display", "block");
+    currentPage = 1;
 
-    //lấy data từ db: page tiếp theo (điều kiện vẫn như cũ)
-    $.get(
-      `${usersURL}?_page=1&_limit=10&_sort=id&_order=desc`
-    ).done( 
-      //sau đó render lại bảng theo data lấy được
-      function(data) {
-        let content = "";
+    updateCurrentMaxUsers()
 
-        for ( let i = 0; i < data.length; i++) {
-          content += rowTemplate(data, i)
-        }
-
-        $("tbody").html(content);
-
-        $(".loading-wrapper").css("display", "none");  
-
-        currentPage = 1;
-        currentMaxUsers = currentPage * currentLimit;
-        
-        if (currentMaxUsers > usersQuantity) {
-          currentMaxUsers = usersQuantity;
-        }
-
-        $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`)
-        
-        console.log(`Current page: ${currentPage}/${pagesQuantity}`)
-      }
-    )
-  } else {
-
-  }
+    renderFirstPage()
+  } 
 })
 
-//bấm nút LAST: sẽ nhảy sang trang ?_page= (pagesQuantity) &_limit=10&_sort=id&_order=desc  
+//bấm nút LAST: sẽ nhảy sang trang cuối
 $(".last-page").click(() => {
 
   //Điều kiện cho phép click nút last: page hiện tại < tổng số pages (page cuối không thể sang last)
   if (currentPage < pagesQuantity) { 
 
-    //loading screen
-    $(".loading-wrapper").css("display", "block");
+    currentPage = pagesQuantity;
+    
+    updateCurrentMaxUsers()
 
-    //lấy data từ db: page tiếp theo (điều kiện vẫn như cũ)
-    $.get(
-      `${usersURL}?_page=${pagesQuantity}&_limit=10&_sort=id&_order=desc`
-    ).done( 
-      //sau đó render lại bảng theo data lấy được
-      function(data) {
-        let content = "";
-
-        for ( let i = 0; i < data.length; i++) {
-          content += rowTemplate(data, i)
-        }
-
-        $("tbody").html(content);
-
-        $(".loading-wrapper").css("display", "none");  
-
-        currentPage = pagesQuantity;
-        currentMaxUsers = currentPage * currentLimit;
-
-        if (currentMaxUsers > usersQuantity) {
-          currentMaxUsers = usersQuantity;
-        }
-
-        $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`)
-
-        console.log(`Current page: ${currentPage}/${pagesQuantity}`)
-      }
-    )
+    renderLastPage()
   }
 })
 
@@ -533,57 +367,3 @@ $(".choose-page__confirm").click(() => {
     }
   )
 })
-
-
-
-
-
-/* ------------------------------------------------------------------------------------------
- legacy
------------------------------------------------------------------------------------------- */
-
-//load trang: GET users page 1 từ database, loop ra các tr là các users (có kèm id tương ứng)
-/* function loadDoc() {
-  //tạo
-  let xhttp = new XMLHttpRequest();
-  //code sẽ chạy khi lấy được dữ liệu từ server
-  xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-      let users = JSON.parse(this.responseText);
-      let content = "";
-      for (let i = 0; i < users.length; i++) {
-        content += `<tr id = "item${users[i].id}" class = "row${i + 1}">
-          <td>
-            <div class="checkbox-wrapper">
-              <input type="checkbox">
-            </div>
-          </td>
-          <td>${users[i].name}</td>
-          <td>${users[i].birthday}</td>
-          <td>${users[i].gender}</td>
-          <td>${users[i].email}</td>
-          <td>${users[i].phone}</td>
-          <td>
-          <a class="btn btn--edit text-primary" href="edit.html?${users[i].id}">
-            <span> <i class="far fa-edit"></i> </span>
-            <span class="ml-2">Chỉnh sửa</span>
-            <span class="ml-3">|</span>
-          </a>
-          <button class="btn btn--delete text-danger pl-0" data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false">
-            <span> <i class="fas fa-trash-alt"></i> </span>
-            <span class="ml-2">Xóa</span>
-          </button>
-          </td>
-        </tr>`;
-      }
-      $("tbody").html(content);
-      $(".loading-wrapper").css("display", "none");
-      $(".page-wrapper").css("display", "flex");
-    }
-  };
-  //load 10 users
-  xhttp.open("GET", `${usersURL}?_page=${currentPage}&_limit=10&_sort=id&_order=desc`, true);
-  xhttp.send();
-}
-
-loadDoc(); */
