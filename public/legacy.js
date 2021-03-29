@@ -330,3 +330,31 @@ $(".next-page").click(() => {
     }
   )
 }) */
+
+$("#index__modal").on("click", ".modal--success.delete--multiple", () => {
+  //Tạo 1 array chứa các thẻ tr đang có input được check
+  let choosenItems = $("tbody tr").has("input:checked").toArray();
+
+  //loop: mỗi tr trong array "bị xóa" sẽ:
+  for (let i = 0; i < choosenItems.length; i++) {
+    //lấy ra targetid của tr này
+    targetId = choosenItems[i].id.slice(4);
+
+    //xóa tr này trên giao diện
+    $(`#item${targetId}`).detach();
+
+    //dựa theo targetid lấy được, xóa item tương ứng trên database
+    $.ajax({
+      url: `${usersURL}/${targetId}`,
+      type: "DELETE",
+    });
+  }
+
+  //update usersQuantity
+  usersQuantity -= choosenItems.length;
+
+  //sau khi xóa nhiều xong thì bỏ check nút check tổng
+  if ($("thead input").is(":checked")) {
+    $("thead input")[0].checked = false;
+  }
+});

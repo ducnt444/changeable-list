@@ -34,6 +34,20 @@ let isSearching = false //có đang trong mode search không, default là không
 
 let isOldFirst = false //có đang trong mode sắp xếp item cũ nhất lên trước không, default là không
 
+
+
+/* ------------------------------------------------------------------------------------------
+ functions
+------------------------------------------------------------------------------------------ */
+
+function toggleLoading() {
+  if ($(".loading-wrapper").css("display") == "none") {
+    $(".loading-wrapper").css("display", "block");
+  } else {
+    $(".loading-wrapper").css("display", "none");
+  }
+}
+
 /* Xác định template cho 1 tr:
 Sẽ là 1 function, nhận vào 2 tham số: dataFromServer (truyền data vào) và loopIndicator (truyền i của loop vào)
 Sẽ return ra đoạn code dưới đây, với data và i được truyền vào tương ứng với mỗi lần gọi */
@@ -75,8 +89,8 @@ function updateCurrentMaxUsers() {
   $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`);
 }
 
-//render next / prev page
-function renderNextPrev() {
+//render current page, gọi sau khi next/prev (currentPage đã thay đổi) hoặc sau DELETE
+function renderCurrentPage() {
   let content = "";
 
   for (let i = (currentPage * 10 - 10); i < (currentPage * 10) && i < usersQuantity; i++) {
@@ -89,10 +103,10 @@ function renderNextPrev() {
 }
 
 //render first page
-function renderFirstPage() {
+function renderFirstPage(length) {
   let content = "";
 
-  for ( let i = 0; i < 10; i++) {
+  for ( let i = 0; i < 10 && i < length; i++) {
     content += rowTemplate(users, i)
   }
 
@@ -112,16 +126,18 @@ function renderLastPage() {
   console.log(`Current page: ${currentPage}/${pagesQuantity}`);
 }
 
-//clone database
-function cloneDatabase() {
-  $.get(
-    `${usersURL}?${usersURLSorted}`
-  ).done( (data) => {
-      
-    }
-  )
-}
+//update lại các global variable sau khi database thay đổi (sau POST, PUT, DELETE)
+function updateData(data) {
 
+  //update users global variable
+  users = data;
+
+  //update số lượng users
+  usersQuantity = users.length;
+
+  //update số lượng pages
+  pagesQuantity = Math.ceil(usersQuantity / 10);
+}
 
 //load trang
 function loadFirstPageFullData() {
@@ -143,7 +159,7 @@ function loadFirstPageFullData() {
       );
       
       //update table (page 1)
-      renderFirstPage()
+      renderFirstPage(users.length);
   
       $(".loading-wrapper").css("display", "none");
       $(".page-wrapper").css("display", "flex");

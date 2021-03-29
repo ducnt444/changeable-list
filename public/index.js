@@ -46,59 +46,63 @@ loadFirstPageFullData()
  "xóa đơn" toggler
 ------------------------------------------------------------------------------------------ */
 
-//1. Event "click nút xóa đơn": toggle và update modal confirm
-$("tbody").on('click', '.btn--delete', function() { 
-  
-    //nút xác nhận: đổi sang chế độ "xác nhận xóa đơn"
-    $("#index__modal .modal--success").addClass("delete--single");
+/*
+A. Event "click nút xóa đơn": 
+1. Update modal confirm
+2. Lấy targetID
+*/
+$("tbody").on('click', '.btn--delete', function() {
+  //1. Update modal confirm
+  $("#index__modal .modal--success").addClass("delete--single"); //nút xác nhận: đổi sang chế độ "xác nhận xóa đơn"
 
-    //nút cancel được hiển thị 
-    $("#index__modal .modal--cancel").css("display", "block");
+  $("#index__modal .modal--cancel").css("display", "block"); //nút cancel được hiển th
 
+  $("#index__modal .modal__text").html(
     //nội dung .modal__text thay đổi
-    $("#index__modal .modal__text").html(
-      `Bạn có muốn xóa hội viên <span class="bold-font">${$(this)
-        .parents("tr")
-        .children("td:nth-child(2)")
-        .text()}</span> ?`
-    );
+    `Bạn có muốn xóa hội viên <span class="bold-font">${$(this)
+      .parents("tr")
+      .children("td:nth-child(2)")
+      .text()}</span> ?`
+  );
 
-    //update id hội viên đang được chọn để xóa đơn
-    targetId = this.parentElement.parentElement.id.slice(4);
+  targetId = this.parentElement.parentElement.id.slice(4); //lấy id hội viên đang được chọn để xóa đơn
 });
 
-//2. Event "click confirm xóa đơn": Xóa hội viên trên table và database
+/*
+B. Event "click confirm xóa đơn": 
+  1. Xóa hội viên trên database; 
+  2. GET database mới
+  3. Update global variables, pagination;
+  4. Render;
+*/ 
 $("#index__modal").on('click', '.modal--success.delete--single', function() {
+
+  toggleLoading(); //bật loading
+
   $.ajax({
     url: `${usersURL}/${targetId}`,
     type: "DELETE",
     success: () => {
       $.get(
         /* `${usersURL}?${usersURLSorted}&_page=${currentPage}&_limit=${currentLimit}` */
-        `${usersURL}?${usersURLSorted}&_page=${currentPage}&_limit=${currentLimit}`
+        `${usersURL}?${usersURLSorted}`
       ).done((data) => {
-          //clone data
-          users = data;
-      
-          //update custom pagination
-          $(".custom-pagination__display-text").text(
-            `1 - ${currentLimit} / ${usersQuantity} hội viên`
-          );
-          
-          //update table (page 1)
-          renderFirstPage()
-      
-          $(".loading-wrapper").css("display", "none");
-          $(".page-wrapper").css("display", "flex");
-      
-          //check
-          console.log("Total users: " + usersQuantity);
-          console.log("Total pages: " + pagesQuantity);
-          console.log(`Current page: ${currentPage}/${pagesQuantity}`);
-        }
-      )
-    }
-  })
+        updateData(data); //update global variables
+
+        updateCurrentMaxUsers(); //update pagination
+
+        renderCurrentPage(); //render lại bảng
+
+        toggleLoading(); //tắt loading
+
+        //check
+        console.log(`Deleted 1 user ID: ${targetId}`);
+        console.log("Total users: " + usersQuantity);
+        console.log("Total pages: " + pagesQuantity);
+        console.log(`Current page: ${currentPage}/${pagesQuantity}`);
+      });
+    },
+  });
 });
 
 
@@ -138,7 +142,7 @@ $("table").on("change", "input", () => {
   }
 });
 
-//1. Event "click lên nút Xóa các mục được chọn": kiểm tra tình trạng các checkbox để update modal và chế độ của nút xác nhận 
+//A. Event "click lên nút Xóa các mục được chọn": kiểm tra tình trạng các checkbox để update modal và chế độ của nút xác nhận 
 $(".buttons-wrapper").on("click", ".btn--delete-selected ", () => {
 
   //Check: nếu có bất kỳ checkbox nào trong table đang được check
@@ -168,30 +172,31 @@ $(".buttons-wrapper").on("click", ".btn--delete-selected ", () => {
   }
 });
 
-//2. Event "click lên nút xác nhận xóa nhiều": kiểm tra tình trạng các checkbox để xóa item tương ứng
+/*
+B. Event "click lên nút xác nhận xóa nhiều": kiểm tra tình trạng các checkbox để xóa item tương ứng
+  1. Lọc ra các item được chọn cho vào 1 array choosen items
+  1. Xóa các hội viên trong array trên khỏi database; 
+  2. GET database mới
+  3. Update global variables, pagination;
+  4. Render lại trang hiện tại;
+*/
 $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
 
+  toggleLoading()
+
   //Tạo 1 array chứa các thẻ tr đang có input được check
-  let itemArr = $("tbody tr").has("input:checked").toArray();
-
-  //loop: mỗi tr trong array "bị xóa" sẽ:
-  for (let i = 0; i < itemArr.length; i++) {
-
-    //lấy ra targetid của tr này
-    targetId = itemArr[i].id.slice(4);
-
-    //xóa tr này trên giao diện
-    $(`#item${targetId}`).detach();
-
-    //dựa theo targetid lấy được, xóa item tương ứng trên database
-    $.ajax({
-      url: `${usersURL}/${targetId}`,
-      type: "DELETE",
-    });
+  let choosenItems = $("tbody tr").has("input:checked");
+  let choosenItemsIDArr = [];
+  for (let i = 0; i < choosenItems.length; i++) {
+    choosenItemsIDArr.push(choosenItems[i].id.slice(4));
   }
+  console.log
 
-  //update usersQuantity
-  usersQuantity -= itemArr.length
+/*   $.ajax({
+    url: `${usersURL}/${choosenItems[i].id.slice(4)}`,
+    type: "DELETE",
+    data: choosenItemsIDArr
+  }); */
 
   //sau khi xóa nhiều xong thì bỏ check nút check tổng
   if ($("thead input").is(":checked")) {
@@ -219,11 +224,10 @@ $(".search-input").focusout(() => {
 let searchInput;
   
 //Event: Khi click nút SEARCH
-
 $(".search-submit").click(() => {
 
   //loading: on
-  $(".loading-wrapper").css("display", "block");
+  toggleLoading();
 
   //Lấy giá trị input của search
   searchInput = $(".search-input").val()
@@ -237,32 +241,30 @@ $(".search-submit").click(() => {
     `${usersURL}?q=${searchInput}&_sort=id&_order=desc`
   ).done(
     function(data) {
-      //clone data mới
-      users = data;
+      if (data.length > 0) {
+        //clone data mới
+        updateData(data);
 
-      //render content (chỉ 10 items đầu)
-      renderFirstPage()
+        //render content (chỉ 10 items đầu)
+        renderFirstPage(data.length);
 
-      //Update bảng thông báo kết quả search
-      $(".search__result").text(
-        `Kết quả tìm kiếm cho "${searchInput}"`
-      );
-      
-      //update data khả dụng trong chế độ search
-      usersQuantity = users.length; //số lượng users trở thành số lượng users phù hợp search route
+        //Update bảng thông báo kết quả search
+        $(".search__result").text(`Kết quả tìm kiếm cho "${searchInput}"`);;
 
-      //update số lượng pages
-      pagesQuantity = Math.ceil(usersQuantity / 10);
+        //update pagination
+        updateCurrentMaxUsers();
 
-      //update pagination
-      updateCurrentMaxUsers()
+        console.log(`Total users: ${usersQuantity}`);
+        console.log(`Current max users: ${currentMaxUsers}`);
+        console.log(`Current page: ${currentPage}/${pagesQuantity}`);
 
-      //loading: off
-      $(".loading-wrapper").css("display", "none");
+      } else { //nếu không có kết quả phù hợp (response array rỗng)
+        $(".search__result").text(`Không tìm thấy kết quả phù hợp cho "${searchInput}"`);
+        $("tbody").html("")
+        $(".custom-pagination__display-text").html(`0 - 0 / 0 hội viên`);
+      }
 
-      console.log(`Total users: ${usersQuantity}`);
-      console.log(`Current max users: ${currentMaxUsers}`);
-      console.log(`Current page: ${currentPage}/${pagesQuantity}`);
+      toggleLoading();//loading: off
     }
   )
 })
@@ -277,7 +279,7 @@ $(".search-submit").click(() => {
 
 
 
-//bấm nút PREV: sẽ nhảy về trang ?_page= (currentPage - 1) &_limit=10&_sort=id&_order=desc 
+//bấm nút PREV: 1. currentPage--; 2. Update current max users; 3. render
 $(".prev-page").click(() => {
 
   //Điều kiện cho phép click nút prev: page hiện tại phải lớn hơn 1 (1 không thể prev về 0)
@@ -287,12 +289,12 @@ $(".prev-page").click(() => {
 
     updateCurrentMaxUsers()
 
-    renderNextPrev()
+    renderCurrentPage()
   }
 })
 
 
-//bấm nút NEXT: sẽ nhảy sang trang ?_page= (currentPage + 1) &_limit=10&_sort=id&_order=desc 
+//bấm nút NEXT: 1. currentPage++; 2. Update current max users; 3. render
 $(".next-page").click(() => {
 
   //Điều kiện cho phép click nút next: page hiện tại < tổng số pages
@@ -302,15 +304,15 @@ $(".next-page").click(() => {
 
     updateCurrentMaxUsers()
 
-    renderNextPrev()
+    renderCurrentPage()
   }
 })
 
 
-//bấm nút FIRST: nhảy về trang đầu tiên
+//bấm nút FIRST: 1. Current page về 1; 2. update pagination; 3. render
 $(".first-page").click(() => {
 
-  //Điều kiện cho phép click nút last: page hiện tại > 1 (page 1 không thể về first)
+  //Điều kiện cho phép click nút first: page hiện tại > 1 (page 1 không thể về first)
   if (currentPage > 1) { 
 
     currentPage = 1;
@@ -321,7 +323,7 @@ $(".first-page").click(() => {
   } 
 })
 
-//bấm nút LAST: sẽ nhảy sang trang cuối
+//bấm nút LAST: 1. Current page = pages Quantity; 2. update pagination; 3. render
 $(".last-page").click(() => {
 
   //Điều kiện cho phép click nút last: page hiện tại < tổng số pages (page cuối không thể sang last)
@@ -341,9 +343,8 @@ $(".choose-page__confirm").click(() => {
 
   let choosePageNum = +$(".choose-page__input").val()
 
-  $(".loading-wrapper").css("display", "block");
+  toggleLoading();
 
-  
   $.get(
     `${usersURL}?_page=${choosePageNum}&_limit=10&_sort=id&_order=desc`
   ).done(
@@ -356,7 +357,7 @@ $(".choose-page__confirm").click(() => {
 
       $("tbody").html(content);
 
-      $(".loading-wrapper").css("display", "none");  
+      toggleLoading(); 
 
       currentPage = choosePageNum;
       currentMaxUsers = currentPage * currentLimit;
