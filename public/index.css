@@ -375,6 +375,12 @@ table input {
   color: #fff;
 }
 
+#check-btn {
+  position: absolute;
+  top: 50px;
+  right: 100px;
+}
+
 
 @media only screen and (min-width: 1200px) {
   body {

@@ -13,6 +13,9 @@ let users;
 //Xác định id hội viên nào được click
 let targetId = "";
 
+//Xác định (các) hội viên được chọn checkbox
+let selectedArray = [];
+
 //Xác định pagination hiện tại. Khởi điểm sẽ = 1 để load trang. 
 let currentPage = 1; //là NUMBER
 
@@ -48,15 +51,32 @@ function toggleLoading() {
   }
 }
 
+function toggleLoadingOn() {
+  if ($(".loading-wrapper").css("display") == "none") {
+    $(".loading-wrapper").css("display", "block");
+  }
+}
+
+function toggleLoadingOff(lastLoop, indicator) {
+  if (lastLoop == indicator) {
+      $(".loading-wrapper").css("display", "none");
+    }
+}
+
 /* Xác định template cho 1 tr:
 Sẽ là 1 function, nhận vào 2 tham số: dataFromServer (truyền data vào) và loopIndicator (truyền i của loop vào)
 Sẽ return ra đoạn code dưới đây, với data và i được truyền vào tương ứng với mỗi lần gọi */
 function rowTemplate(dataFromServer, loopIndicator) {
+  let checked = ""
+  if ( selectedArray.indexOf (dataFromServer[loopIndicator].id.toString() ) != -1 ) {
+    checked = "checked"
+  }
+
   return `
-  <tr id = "item${dataFromServer[loopIndicator].id}">
+  <tr id = "${dataFromServer[loopIndicator].id}">
     <td>
       <div class="checkbox-wrapper">
-        <input type="checkbox">
+        <input type="checkbox" class=${dataFromServer[loopIndicator].selection} ${checked}>
       </div>
     </td>
     <td>${dataFromServer[loopIndicator].name}</td>
@@ -78,65 +98,48 @@ function rowTemplate(dataFromServer, loopIndicator) {
   </tr>`
 }
 
-//update currentMaxUsers
-function updateCurrentMaxUsers() {
-  currentMaxUsers = currentPage * currentLimit;
-
-  if (currentMaxUsers > usersQuantity) {
-    currentMaxUsers = usersQuantity;
-  }
-
-  $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`);
-}
-
-//render current page, gọi sau khi next/prev (currentPage đã thay đổi) hoặc sau DELETE
+//render ra page dựa trên currentPage: update pagination và render bảng
 function renderCurrentPage() {
-  let content = "";
 
-  for (let i = (currentPage * 10 - 10); i < (currentPage * 10) && i < usersQuantity; i++) {
-    content += rowTemplate(users, i);
+  //1. update pagination
+  currentMaxUsers = currentPage * currentLimit; //update current Max Users
+
+  if (currentMaxUsers > usersQuantity) { //check xem current Max Users có vượt quá số lượng users, nếu có thì giới hạn lại
+    currentMaxUsers = usersQuantity;  
   }
 
-  $("tbody").html(content);
+  $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`); //update text
 
-  console.log(`Current page: ${currentPage}/${pagesQuantity}`);
-}
+  //2. render bảng
+  let content = ""; 
 
-//render first page
-function renderFirstPage(length) {
-  let content = "";
-
-  for ( let i = 0; i < 10 && i < length; i++) {
-    content += rowTemplate(users, i)
+  for (let i = (currentPage * 10 - 10); i < (currentPage * 10) && i < usersQuantity; i++) { //loop tối đa 10 lần, trong TH users < 10 thì tối đa là số lượng users
+    content += rowTemplate(users, i); //mỗi loop render ra 1 tr, cho vào content
   }
+ //nếu item nào đang được checked trước đó (lưu = .selected) thì sẽ checked lại
+ 
+  $("tbody").html(content); //render bảng bằng content
 
-  $("tbody").html(content);
-}
+  /* $(".selected").prop("checked", true); */
 
-//render last page
-function renderLastPage() {
-  let content = "";
+  $("thead input").prop("checked", false);
 
-  for ( let i = (pagesQuantity * 10 - 10); i < (pagesQuantity * 10 - 1) && i < (usersQuantity); i++) {
-    content += rowTemplate(users, i)
-  }
-
-  $("tbody").html(content);
-
-  console.log(`Current page: ${currentPage}/${pagesQuantity}`);
+  console.log(`Current page: ${currentPage}/${pagesQuantity}`); 
 }
 
 //update lại các global variable sau khi database thay đổi (sau POST, PUT, DELETE)
 function updateData(data) {
+  users = data; //update global variable users
+  
+  usersQuantity = users.length; //update số lượng users
 
-  //update users global variable
-  users = data;
+  pagesQuantity = Math.ceil(usersQuantity / 10); //update số lượng pages
+}
 
-  //update số lượng users
-  usersQuantity = users.length;
+function updateUsers() {
+  usersQuantity = users.length; //update số lượng users
 
-  //update số lượng pages
-  pagesQuantity = Math.ceil(usersQuantity / 10);
+  pagesQuantity = Math.ceil(usersQuantity / 10); //update số lượng pages
 }
 
 //load trang
@@ -158,8 +161,8 @@ function loadFirstPageFullData() {
         `1 - ${currentLimit} / ${usersQuantity} hội viên`
       );
       
-      //update table (page 1)
-      renderFirstPage(users.length);
+      //render table (page 1)
+      renderCurrentPage()
   
       $(".loading-wrapper").css("display", "none");
       $(".page-wrapper").css("display", "flex");
@@ -171,3 +174,4 @@ function loadFirstPageFullData() {
     }
   );
 }
+

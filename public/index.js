@@ -3,6 +3,8 @@
  setup global (đã được declare trong script.js dùng chung cho mọi trang)
 ------------------------------------------------------------------------------------------ */
 /*
+
+/* 
 //Shorthand cho URL của users và URL users (sorted)
 let usersURL = "https://changable-list-test.herokuapp.com/users"
 let usersURLSorted = "&_sort=id&_order=desc"
@@ -12,6 +14,9 @@ let users;
 
 //Xác định id hội viên nào được click
 let targetId = "";
+
+//Xác định (các) hội viên được chọn checkbox
+let selectedArray = [];
 
 //Xác định pagination hiện tại. Khởi điểm sẽ = 1 để load trang. 
 let currentPage = 1; //là NUMBER
@@ -33,7 +38,15 @@ let currentMaxUsers = currentPage * currentLimit; //(là NUMBER)
 let isSearching = false //có đang trong mode search không, default là không (nếu đang search mode == true, load trang sẽ bỏ search mode)
 
 let isOldFirst = false //có đang trong mode sắp xếp item cũ nhất lên trước không, default là không
+
 */
+
+/* ------------------------------------------------------------------------------------------
+ test button
+------------------------------------------------------------------------------------------ */
+$("#check-btn").click( () => {
+  console.log(selectedArray)
+})
 
 /* ------------------------------------------------------------------------------------------
  load trang 2 steps: 1.GET toàn bộ users từ database 2.loop ra các 10 tr là các users (có kèm id tương ứng)
@@ -65,7 +78,7 @@ $("tbody").on('click', '.btn--delete', function() {
       .text()}</span> ?`
   );
 
-  targetId = this.parentElement.parentElement.id.slice(4); //lấy id hội viên đang được chọn để xóa đơn
+  targetId = this.parentElement.parentElement.id; //lấy id hội viên đang được chọn để xóa đơn
 });
 
 /*
@@ -89,8 +102,6 @@ $("#index__modal").on('click', '.modal--success.delete--single', function() {
       ).done((data) => {
         updateData(data); //update global variables
 
-        updateCurrentMaxUsers(); //update pagination
-
         renderCurrentPage(); //render lại bảng
 
         toggleLoading(); //tắt loading
@@ -98,7 +109,6 @@ $("#index__modal").on('click', '.modal--success.delete--single', function() {
         //check
         console.log(`Deleted 1 user ID: ${targetId}`);
         console.log("Total users: " + usersQuantity);
-        console.log("Total pages: " + pagesQuantity);
         console.log(`Current page: ${currentPage}/${pagesQuantity}`);
       });
     },
@@ -111,23 +121,59 @@ $("#index__modal").on('click', '.modal--success.delete--single', function() {
  nút toggler chọn check tất cả 
 ------------------------------------------------------------------------------------------ */
 
-//Event: khi "bất kỳ thẻ input nào của thead" (chính là checkbox tổng) có thay đổi
+//Event: khi nút checkbox tổng có thay đổi, update các nút checkbox
 $("thead").on('change', 'input', function() { 
 
-  //check xem checkbox tổng có đang check không
+  //check xem checkbox tổng có được check không
   if ( $("thead input").is(":checked") ) {
 
     //nếu có: check mọi checkbox đơn
-    $("tbody input").prop("checked", true);
-    console.log("check all")
-  } else {
+    $("tbody input").prop("checked", true).change();
+    
+    console.log("checked all")
 
+  } else {
     //nếu không: hủy check mọi checkbox đơn
-    $("tbody input").prop("checked", false);
-    console.log("uncheck all")
+    $("tbody input").prop("checked", false).change();
+
+    console.log("unchecked all")
   }
 });
 
+//Event: khi các checkbox được check, sẽ lưu lại vào item của checkbox đó
+$("tbody").on('change', 'input', function() { 
+  if ($(this).is(":checked")) {
+    if ( selectedArray.indexOf( $(this).parents("tr").attr('id') ) == -1 ) {
+      selectedArray.push( $(this).parents("tr").attr('id') )
+      console.log(`Selected [${selectedArray.length}]: ${selectedArray}`);
+    }
+
+/*     $.ajax({
+      url: `${usersURL}/${$(this).parents("tr").attr('id')}`,
+      method: "PATCH",
+      data: {"selection": "selected"}
+    }).done(() => {
+      console.log(users[+`${$(this).parents("tr").attr('id')}`])
+      $(this).addClass("selected")
+    }) */
+
+  } else {
+    selectedArray.splice(
+      selectedArray.indexOf( $(this).parents("tr").attr('id') ), 1
+    )
+    console.log(`Selected [${selectedArray.length}]: ${selectedArray}`);
+
+
+/*     $.ajax({
+      url: `${usersURL}/${$(this).parents("tr").attr('id')}`,
+      method: "PATCH",
+      data: {"selection": "none"}
+    }).done(() => {
+      $(this).removeClass("selected")
+    }) */
+
+  }
+});
 
 
 /* ------------------------------------------------------------------------------------------
@@ -159,46 +205,64 @@ $(".buttons-wrapper").on("click", ".btn--delete-selected ", () => {
     $("#index__modal .modal__text").text("Bạn có muốn xóa các mục được chọn?");
 
     //Check: nếu không có bất kỳ checkbox nào trong table đang được check
-  } else {
-
-    //nút xác nhận hủy chế độ "xác nhận xóa đơn"
-    $("#index__modal .modal--success").removeClass("delete--single");
-
-    //Ẩn nút cancel trong index modal
-    $("#index__modal .modal--cancel").css("display", "none");
-
-    //Update .modal__text
-    $("#index__modal .modal__text").text("Không có mục nào được chọn");
   }
 });
 
 /*
 B. Event "click lên nút xác nhận xóa nhiều": kiểm tra tình trạng các checkbox để xóa item tương ứng
-  1. Lọc ra các item được chọn cho vào 1 array choosen items
-  1. Xóa các hội viên trong array trên khỏi database; 
-  2. GET database mới
-  3. Update global variables, pagination;
-  4. Render lại trang hiện tại;
+  1. Loop selected Array (chứa id của các item đang được chọn)
+    1.1 Xóa các hội viên trong array đó khỏi database; 
+    1.2 Update chay data clone (users), không dùng GET
+    1.3 Update các global variables liên quan (theo users)
+    1.4 Render lại trang hiện tại;
+
+  2. Reset selected Array 
+  3. Xóa xong thì bỏ check ở nút check tổng
 */
+
 $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
 
-  toggleLoading()
+  toggleLoadingOn()
 
-  //Tạo 1 array chứa các thẻ tr đang có input được check
-  let choosenItems = $("tbody tr").has("input:checked");
-  let choosenItemsIDArr = [];
-  for (let i = 0; i < choosenItems.length; i++) {
-    choosenItemsIDArr.push(choosenItems[i].id.slice(4));
+  //1. Loop selected Array (chứa id của các item đang được chọn)
+  for (let i = 0; i < selectedArray.length; i++) { 
+
+    let lastLoop = selectedArray.length - 1; //xác định vòng lặp cuối cùng (để tắt loading)
+
+    $.ajax({ //1.1 Xóa các hội viên trong array đó khỏi database; 
+      url: `${usersURL}/${selectedArray[i]}`,
+      type: "DELETE"
+
+    }).done( () => { //1.2 Update chay data clone (users), không dùng GET
+
+      console.log(selectedArray);
+
+      console.log("target ID in array: " + selectedArray[i]);
+
+      let target = users.findIndex(
+        item => item.id.toString() == selectedArray[i] //tìm index của item bị xóa trong users
+      );  
+
+      console.log("target ID index in users: " + target);
+
+      users.splice(target, 1); //xóa item đó trong users
+
+      updateUsers(); //1.3 Update các global variables liên quan (theo users)
+
+      renderCurrentPage(); //1.4 Render lại trang hiện tại;
+
+      toggleLoadingOff(lastLoop, i); //tắt loading tại vòng loop cuối cùng
+
+      console.log("data length: " + users.length);
+      console.log("users length: " + users.length);
+      console.log("users quantity: " + usersQuantity);
+      console.log("page quantity: " + pagesQuantity); 
+    })
   }
-  console.log
 
-/*   $.ajax({
-    url: `${usersURL}/${choosenItems[i].id.slice(4)}`,
-    type: "DELETE",
-    data: choosenItemsIDArr
-  }); */
+  //2. Reset selected Array 
 
-  //sau khi xóa nhiều xong thì bỏ check nút check tổng
+  //3. Xóa xong thì bỏ check ở nút check tổng
   if ($("thead input").is(":checked")) {
     $("thead input")[0].checked = false;
   }
@@ -226,6 +290,9 @@ let searchInput;
 //Event: Khi click nút SEARCH
 $(".search-submit").click(() => {
 
+  //search mode
+  isSearching = true;
+
   //loading: on
   toggleLoading();
 
@@ -246,18 +313,17 @@ $(".search-submit").click(() => {
         updateData(data);
 
         //render content (chỉ 10 items đầu)
-        renderFirstPage(data.length);
+        renderCurrentPage();
 
         //Update bảng thông báo kết quả search
         $(".search__result").text(`Kết quả tìm kiếm cho "${searchInput}"`);;
 
-        //update pagination
-        updateCurrentMaxUsers();
-
-        console.log(`Total users: ${usersQuantity}`);
-        console.log(`Current max users: ${currentMaxUsers}`);
-        console.log(`Current page: ${currentPage}/${pagesQuantity}`);
-
+        console.log(`----- Search result for ${searchInput} ----- `);
+        console.log(`Search mode: ${isSearching}`)
+        console.log(`Total users filtered: ${usersQuantity}`);
+        console.log(`Current max users filtered: ${currentMaxUsers}`);
+        console.log(`Current page filtered: ${currentPage}/${pagesQuantity}`);
+        console.log(`----- End ----- `);
       } else { //nếu không có kết quả phù hợp (response array rỗng)
         $(".search__result").text(`Không tìm thấy kết quả phù hợp cho "${searchInput}"`);
         $("tbody").html("")
@@ -287,8 +353,6 @@ $(".prev-page").click(() => {
 
     currentPage--;
 
-    updateCurrentMaxUsers()
-
     renderCurrentPage()
   }
 })
@@ -301,8 +365,6 @@ $(".next-page").click(() => {
   if (currentPage < pagesQuantity) { 
 
     currentPage++;
-
-    updateCurrentMaxUsers()
 
     renderCurrentPage()
   }
@@ -317,9 +379,7 @@ $(".first-page").click(() => {
 
     currentPage = 1;
 
-    updateCurrentMaxUsers()
-
-    renderFirstPage()
+    renderCurrentPage()
   } 
 })
 
@@ -330,16 +390,14 @@ $(".last-page").click(() => {
   if (currentPage < pagesQuantity) { 
 
     currentPage = pagesQuantity;
-    
-    updateCurrentMaxUsers()
 
-    renderLastPage()
+    renderCurrentPage()
   }
 })
 
 //nút chuyển sang trang tùy chọn
 
-$(".choose-page__confirm").click(() => {
+/* $(".choose-page__confirm").click(() => {
 
   let choosePageNum = +$(".choose-page__input").val()
 
@@ -367,4 +425,4 @@ $(".choose-page__confirm").click(() => {
       console.log(`Current page: ${currentPage}/${pagesQuantity}`)
     }
   )
-})
+}) */

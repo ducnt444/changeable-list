@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------------------------
- index legacy
+  legacy: code không còn sử dụng hoặc đã có phiên bản tối ưu hơn
 ------------------------------------------------------------------------------------------ */
 
 //load trang: GET users page 1 từ database, loop ra các tr là các users (có kèm id tương ứng)
@@ -358,3 +358,151 @@ $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
     $("thead input")[0].checked = false;
   }
 });
+
+
+//render last page
+/* function renderLastPage() {
+  let content = "";
+
+  for ( let i = (pagesQuantity * 10 - 10); i < (pagesQuantity * 10 - 1) && i < (usersQuantity); i++) {
+    content += rowTemplate(users, i)
+  }
+
+  $("tbody").html(content);
+
+  console.log(`Current page: ${currentPage}/${pagesQuantity}`);
+} */
+
+//update currentMaxUsers
+function updateCurrentMaxUsers() {
+  currentMaxUsers = currentPage * currentLimit;
+
+  if (currentMaxUsers > usersQuantity) {
+    currentMaxUsers = usersQuantity;
+  }
+
+  $(".custom-pagination__display-text").text(`${currentPage * currentLimit - currentLimit + 1} - ${currentMaxUsers} / ${usersQuantity} hội viên`);
+}
+
+
+
+
+
+//Event: khi các checkbox được check, sẽ lưu lại vào item của checkbox đó
+$("tbody").on('change', 'input', function() { 
+  if ($(this).is(":checked")) {
+    $.ajax({
+      url: `${usersURL}/${$(this).parents("tr").attr('id').slice(4)}`,
+      method: "PATCH",
+      data: {"selection": "selected"}
+    }).done(() => {
+      console.log(users[+`${$(this).parents("tr").attr('id').slice(4)}`])
+      $(this).addClass("selected")
+    })
+  } else {
+    $.ajax({
+      url: `${usersURL}/${$(this).parents("tr").attr('id').slice(4)}`,
+      method: "PATCH",
+      data: {"selection": "none"}
+    }).done(() => {
+      $(this).removeClass("selected")
+    })
+  }
+});
+
+/*
+B. Event "click lên nút xác nhận xóa nhiều": kiểm tra tình trạng các checkbox để xóa item tương ứng
+  1. Lọc ra các item được chọn cho vào 1 array choosen items
+  1. Xóa các hội viên trong array trên khỏi database; 
+  2. GET database mới
+  3. Update global variables, pagination;
+  4. Render lại trang hiện tại;
+*/
+
+$("#index__modal").on("click", ".modal--success.delete--multiple", () => {
+
+  toggleLoadingOn()
+
+  //Tạo 1 array chứa các thẻ tr đang có input được check
+  let chosenItems = $("tbody tr").has("input:checked");
+
+  for (let i = 0; i < chosenItems.length; i++) {
+    let lastLoop = chosenItems.length - 1
+
+    if (isSearching) {
+      $.ajax({
+        url: `${usersURL}/${chosenItems[i].id.slice(4)}`,
+        type: "DELETE"
+      }).done((data) => {
+          console.log(`Mode: search`)
+          console.log(`Deleted item ${chosenItems[i].id.slice(4)}`)
+          console.log("data " + data);
+          console.log("data length " + data.length);
+          console.log("users length " + users.length);
+          console.log("users quantity " + usersQuantity);
+          console.log("page quantity " + pagesQuantity);
+
+/*           updateData(data);
+
+          renderCurrentPage(); */
+        }
+      )
+
+    } else {
+      $.ajax({
+        url: `${usersURL}/${chosenItems[i].id.slice(4)}`,
+        type: "DELETE"
+      }).done(
+        $.get(
+          `${usersURL}?${usersURLSorted}`
+        ).done(
+          (data) => {
+            updateData(data);
+            console.log(`Mode: normal`)
+            console.log("data length: " + data.length);
+            console.log("users length: " + users.length);
+            console.log("users quantity: " + usersQuantity);
+            console.log("page quantity: " + pagesQuantity);
+            $(".search__result").text(`Loop: ${i}`)
+            toggleLoadingOff(lastLoop, i)
+
+    /*           updateData(data);
+    
+              renderCurrentPage(); */              
+          }
+        )
+      )
+    }
+  }
+  
+
+  //sau khi xóa nhiều xong thì bỏ check nút check tổng
+  if ($("thead input").is(":checked")) {
+    $("thead input")[0].checked = false;
+  }
+})
+
+
+/* ul.pagination
+li.page-item.btn.first-page
+  a.page-link
+    i.fas.fa-angle-double-left
+li.page-item.btn.prev-page
+  a.page-link
+    i.fas.fa-angle-left
+li.page-item.active
+  a.page-link 1      
+li.page-item
+  a.page-link 2
+li.page-item
+  a.page-link 3
+li.page-item
+  a.page-link 4
+li.page-item
+  button.page-link.choose-page-btn(type="button" data-toggle="modal" data-target="#choose-page__modal" data-backdrop="static" data-keyboard="false") ...
+li.page-item.next-page
+  a.page-link 
+    i.fas.fa-angle-right
+li.page-item.last-page
+  a.page-link
+    i.fas.fa-angle-double-right */

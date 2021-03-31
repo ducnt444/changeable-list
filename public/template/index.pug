@@ -16,6 +16,7 @@ body
     p.loading__text Vui lòng đợi trong giây lát
 
   .page-wrapper.container.flex-column.justify-content-center.align-items-center.mt-5.px-0 
+    button#check-btn(type = "button") Check!
 
     #index__modal.modal.fade
       .modal-dialog
@@ -92,30 +93,21 @@ body
           th Thao tác
           
       tbody
-    
-    ul.pagination
-      li.page-item.btn.first-page
-        a.page-link
-          i.fas.fa-angle-double-left
-      li.page-item.btn.prev-page
-        a.page-link
-          i.fas.fa-angle-left
-      li.page-item.active
-        a.page-link 1      
-      li.page-item
-        a.page-link 2
-      li.page-item
-        a.page-link 3
-      li.page-item
-        a.page-link 4
-      li.page-item
-        button.page-link.choose-page-btn(type="button" data-toggle="modal" data-target="#choose-page__modal" data-backdrop="static" data-keyboard="false") ...
-      li.page-item.next-page
-        a.page-link 
-          i.fas.fa-angle-right
-      li.page-item.last-page
-        a.page-link
-          i.fas.fa-angle-double-right
+  
+    .custom-pagination.d-flex.justify-content-between.align-items-center.mx-auto 
+      button.custom-pagination__item.btn.first-page
+        i.fas.fa-angle-double-left
+
+      button.custom-pagination__item.btn.prev-page
+        i.fas.fa-angle-left
+        
+      p.custom-pagination__display-text
+
+      button.custom-pagination__item.btn.next-page
+        i.fas.fa-angle-right
+
+      button.custom-pagination__item.btn.last-page
+        i.fas.fa-angle-double-right
 
     script(src='https://kit.fontawesome.com/d8c5e3f38e.js' crossorigin='anonymous')
 
