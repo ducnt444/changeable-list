@@ -45,7 +45,7 @@ let isOldFirst = false //có đang trong mode sắp xếp item cũ nhất lên t
  test button
 ------------------------------------------------------------------------------------------ */
 $("#check-btn").click( () => {
-  console.log(selectedArray)
+  console.log(users)
 })
 
 /* ------------------------------------------------------------------------------------------
@@ -247,16 +247,18 @@ $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
 
       users.splice(target, 1); //xóa item đó trong users
 
+      console.log(users)
+
       updateUsers(); //1.3 Update các global variables liên quan (theo users)
 
       renderCurrentPage(); //1.4 Render lại trang hiện tại;
 
       toggleLoadingOff(lastLoop, i); //tắt loading tại vòng loop cuối cùng
 
-      console.log("data length: " + users.length);
+/*       console.log("data length: " + users.length);
       console.log("users length: " + users.length);
       console.log("users quantity: " + usersQuantity);
-      console.log("page quantity: " + pagesQuantity); 
+      console.log("page quantity: " + pagesQuantity);  */
     })
   }
 

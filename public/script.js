@@ -124,7 +124,7 @@ function renderCurrentPage() {
 
   $("thead input").prop("checked", false);
 
-  console.log(`Current page: ${currentPage}/${pagesQuantity}`); 
+/*   console.log(`Current page: ${currentPage}/${pagesQuantity}`);  */
 }
 
 //update lại các global variable sau khi database thay đổi (sau POST, PUT, DELETE)
