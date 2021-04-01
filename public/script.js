@@ -157,6 +157,20 @@ function updateUsers() {
   pagesQuantity = Math.ceil(usersQuantity / 10); //update số lượng pages
 }
 
+//load lần đầu: load up to 10 items đầu tiên rồi bỏ loading, sau đó load ngầm toàn bộ users
+function firstLoad() {
+  $.ajax({
+    url: `${usersURL}?${usersURLSorted}$_page=1&_limit=10`,
+    method: "GET",
+    headers: bearerToken,
+    error: () => {
+      location.replace("login.html");
+    }
+  }).done(
+
+  )
+}
+
 //load trang
 function loadFirstPageFullData() {
   $.ajax({
@@ -189,6 +203,7 @@ function loadFirstPageFullData() {
       $(".page-wrapper").css("display", "flex");
   
       //check
+      console.log(`Bearer ${token}`)
       console.log("Total users: " + usersQuantity);
       console.log("Total pages: " + pagesQuantity);
       console.log(`Current page: ${currentPage}/${pagesQuantity}`);
