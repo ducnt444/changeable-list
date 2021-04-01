@@ -10,8 +10,9 @@ let usersURLMin = "https://changeable-list.herokuapp.com/users?_page=1&_limit=1"
 let usersURLSorted = "&_sort=id&_order=desc"
 
 //Lấy token từ local Storage
-let savedToken = localStorage.getItem("changeable-list-token");
+let token = localStorage.getItem("changeable-list-token");
 let activeUserID = localStorage.getItem("active-user-id");
+let bearerToken = {Authorization: `Bearer ${token}`}
 
 //Tạo bản sao data
 let users;
@@ -161,7 +162,7 @@ function loadFirstPageFullData() {
   $.ajax({
     url: `${usersURL}?${usersURLSorted}`,
     method: "GET",
-    headers: {Authorization: `Bearer ${savedToken}`},
+    headers: {Authorization: `Bearer ${token}`},
     error: () => {
       location.replace("login.html");
     }

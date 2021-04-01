@@ -400,7 +400,9 @@ table input {
   font-weight: 500;
 }
 
-
+.login-confirm--fail {
+  display: none;
+}
 
 
 .index-wrapper {

@@ -306,10 +306,12 @@ $(".search-submit").click(() => {
   currentPage = 1;
 
   //GET data mới từ input search, mode: search
-  $.get(
+  $.ajax({
     //get toàn bộ user phù hợp search (bỏ _page và _limit, nhưng sau đó sẽ chỉ render 10 items đầu tiên)
-    `${usersURL}?q=${searchInput}&_sort=id&_order=desc`
-  ).done(
+    url: `${usersURL}?q=${searchInput}&_sort=id&_order=desc`,
+    method: "GET",
+    headers: {Authorization: "Bearer " + token}
+  }).done(
     function(data) {
       if (data.length > 0) {
         //clone data mới

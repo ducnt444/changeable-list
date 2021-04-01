@@ -25,7 +25,7 @@
       <div class="login-modal__text text-center"> 
         <div class="spinner-border"></div>
       </div>
-      <button class="login-modal__cancel btn btn-success login-confirm--fail" type="button">Xác nhận</button>
+      <button class="login-modal__cancel btn btn-success login-confirm--fail mt-4" type="button">Xác nhận</button>
     </div>
   </div>
   <script src="https://kit.fontawesome.com/d8c5e3f38e.js" crossorigin="anonymous"></script>
@@ -41,6 +41,7 @@
       setTimeout(() => { 
         $(".login-modal").removeClass("modal--active");
         $(".login-modal__text").html('<div class="spinner-border"></div>')
+        $(".login-modal__cancel").css("display", "none")
         }, 1500)
     }
     

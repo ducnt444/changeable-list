@@ -78,9 +78,11 @@ body
 
       let userID = location.href.split("?")[1];
 
-      $.get(
-        `https://changeable-list.herokuapp.com/users/${userID}`,
-        function(data) {
+      $.ajax({
+        url: `${usersURL}/${userID}`,
+        method: "GET",
+        headers: {Authorization: "Bearer " + token},
+        success: (data) => {
           $("input")[0].value = data.name;
           $("input")[1].value = data.birthday;
           if (data.gender == "Nam") {
@@ -91,22 +93,23 @@ body
           $("input")[4].value = data.email;
           $("input")[5].value = data.phone;
         }
-      )
+      })
 
       let gender;
 
       $(".gender-input").click(() => {
+
+      });
+
+      $("#save").click(() => {
         if($("#input__gender--male").is(":checked")) {
           gender = "Nam"
         } else {
           gender = "Nữ"
         }
-      });
-
-      $("#save").click(() => {
         $.ajax({
           type: "PUT",
-          url: `https://changeable-list.herokuapp.com/users/${userID}`,
+          url: `${usersURL}/${userID}`,
           data: {
             "name": $("input")[0].value,
             "birthday": $("input")[1].value,
@@ -114,6 +117,7 @@ body
             "email": $("input")[4].value,
             "phone": $("input")[5].value
           },
+          headers: bearerToken,
           //data: `name=${$("input")[0].value}&birthday=${$("input")[1].value}&email=${$("input")[2].value}&phone=${$("input")[3].value}`,
           success: function() {
             $(".body-text").html(`

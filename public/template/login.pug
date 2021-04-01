@@ -30,7 +30,7 @@ body
     .login-modal__body
       .login-modal__text.text-center 
         .spinner-border
-      button.login-modal__cancel.btn.btn-success.login-confirm--fail(type="button") Xác nhận
+      button.login-modal__cancel.btn.btn-success.login-confirm--fail.mt-4(type="button") Xác nhận
 
   script(src='https://kit.fontawesome.com/d8c5e3f38e.js' crossorigin='anonymous')
 
@@ -49,6 +49,7 @@ body
       setTimeout(() => { 
         $(".login-modal").removeClass("modal--active");
         $(".login-modal__text").html('<div class="spinner-border"></div>')
+        $(".login-modal__cancel").css("display", "none")
         }, 1500)
     }
 
