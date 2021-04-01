@@ -4,8 +4,8 @@
 ------------------------------------------------------------------------------------------ */
 
 //Shorthand cho các URL
-let API_URL = "https://changable-list-test.herokuapp.com"
-let usersURL = "https://changable-list-test.herokuapp.com/users"
+let API_URL = "https://changeable-list.herokuapp.com"
+let usersURL = "https://changeable-list.herokuapp.com/users"
 let usersURLSorted = "&_sort=id&_order=desc"
 
 //Tạo bản sao data
@@ -146,7 +146,7 @@ function updateUsers() {
 //load trang
 function loadFirstPageFullData() {
   $.ajax(
-    
+
   )
   $.get(
     `${usersURL}?${usersURLSorted}`

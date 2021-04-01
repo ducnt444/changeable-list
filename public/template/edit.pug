@@ -79,7 +79,7 @@ body
       let userID = location.href.split("?")[1];
 
       $.get(
-        `https://changable-list-test.herokuapp.com/users/${userID}`,
+        `https://changeable-list.herokuapp.com/users/${userID}`,
         function(data) {
           $("input")[0].value = data.name;
           $("input")[1].value = data.birthday;
@@ -106,7 +106,7 @@ body
       $("#save").click(() => {
         $.ajax({
           type: "PUT",
-          url: `https://changable-list-test.herokuapp.com/users/${userID}`,
+          url: `https://changeable-list.herokuapp.com/users/${userID}`,
           data: {
             "name": $("input")[0].value,
             "birthday": $("input")[1].value,

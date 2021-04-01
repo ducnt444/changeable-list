@@ -6,7 +6,7 @@
 
 /* 
 //Shorthand cho URL của users và URL users (sorted)
-let usersURL = "https://changable-list-test.herokuapp.com/users"
+let usersURL = "https://changeable-list.herokuapp.com/users"
 let usersURLSorted = "&_sort=id&_order=desc"
 
 //Tạo bản sao data
