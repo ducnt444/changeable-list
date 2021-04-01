@@ -242,7 +242,7 @@ $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
 
       let target = users.findIndex(
         item => item.id.toString() == selectedArray[i] //tìm index của item bị xóa trong users
-      );  
+      );
 
       console.log("target ID index in users: " + target);
 

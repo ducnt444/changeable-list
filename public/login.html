@@ -22,7 +22,7 @@
   </div>
   <div class="login-modal"> 
     <div class="login-modal__body">
-      <div class="login-modal__text mb-4"> 
+      <div class="login-modal__text text-center"> 
         <div class="spinner-border"></div>
       </div>
       <button class="login-modal__cancel btn btn-success login-confirm--fail" type="button">Xác nhận</button>
@@ -33,6 +33,10 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
   <script src="script.js"></script>
   <script>
+    console.log( "Active user: " + localStorage.getItem("active-user-name") )
+    console.log( "Active user ID: " + localStorage.getItem("active-user-id") )
+    console.log( "Active token: " + localStorage.getItem("changeable-list-token") )
+    
     function hideModal() {
       setTimeout(() => { 
         $(".login-modal").removeClass("modal--active");
@@ -40,7 +44,7 @@
         }, 1500)
     }
     
-    function processToMain() {
+    function processToIndex() {
       setTimeout(() => { 
         location.replace("index.html");
         }, 1500)
@@ -65,11 +69,15 @@
           hideModal()
         },
         success: (response)=> {
+          localStorage.setItem("changeable-list-token", response.token)
+          localStorage.setItem("active-user-id", JSON.stringify(response.id))
+          localStorage.setItem("active-user-name", JSON.stringify(response.name))
+    
           $(".login-modal__cancel").css("display", "none")
-          $(".login-modal__text").html("Đăng nhập thành công")
-          localStorage.setItem("changeable-list-token", `${response.token}`)
-          console.log("Stored token: " + localStorage.getItem("changeable-list-token"))
-          console.log("Response token: " + response.token)
+          $(".login-modal__text").html("Đăng nhập thành công <br> <span class='my-2 d-block'> Bạn sẽ được chuyển về trang chủ </span> <br> <span class='spinner-border'></span>")
+          console.log( "Response " + JSON.stringify(response.id) )
+          console.log("Token " + response.token)
+          processToIndex()
         }
       })
     })

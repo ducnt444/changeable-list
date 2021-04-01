@@ -6,7 +6,12 @@
 //Shorthand cho các URL
 let API_URL = "https://changeable-list.herokuapp.com"
 let usersURL = "https://changeable-list.herokuapp.com/users"
+let usersURLMin = "https://changeable-list.herokuapp.com/users?_page=1&_limit=1"
 let usersURLSorted = "&_sort=id&_order=desc"
+
+//Lấy token từ local Storage
+let savedToken = localStorage.getItem("changeable-list-token");
+let activeUserID = localStorage.getItem("active-user-id");
 
 //Tạo bản sao data
 let users;
@@ -43,6 +48,14 @@ let isOldFirst = false //có đang trong mode sắp xếp item cũ nhất lên t
 /* ------------------------------------------------------------------------------------------
  functions
 ------------------------------------------------------------------------------------------ */
+
+$("#logout__modal .modal--confirm").click(() => {
+  localStorage.setItem("changeable-list-token", "")
+  localStorage.setItem("active-user-id", "")
+  localStorage.setItem("active-user-name", "")
+  toggleLoadingOn()
+  setTimeout(() => location.replace("login.html"), 1000)
+})
 
 function toggleLoading() {
   if ($(".loading-wrapper").css("display") == "none") {
@@ -148,7 +161,7 @@ function loadFirstPageFullData() {
   $.ajax({
     url: `${usersURL}?${usersURLSorted}`,
     method: "GET",
-    headers: {Authorization: `Bearer ${localStorage.getItem("changeable-list-token")}`},
+    headers: {Authorization: `Bearer ${savedToken}`},
     error: () => {
       location.replace("login.html");
     }
@@ -161,16 +174,17 @@ function loadFirstPageFullData() {
   
       //update số lượng pages
       pagesQuantity = Math.ceil(usersQuantity / 10);
-  
-      //update custom pagination
-      $(".custom-pagination__display-text").text(
-        `1 - ${currentLimit} / ${usersQuantity} hội viên`
-      );
-      
+
+      let activeUserIDInGlobalVar = users.findIndex(
+        item => item.id.toString() == activeUserID
+      )
+
+      $(".account__name").text(users[activeUserIDInGlobalVar].name)
+
       //render table (page 1)
       renderCurrentPage()
   
-      $(".loading-wrapper").css("display", "none");
+      toggleLoading()
       $(".page-wrapper").css("display", "flex");
   
       //check

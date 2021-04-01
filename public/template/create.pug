@@ -10,6 +10,10 @@ head
   link(rel="stylesheet" href="index.css")
 
 body
+  .loading-wrapper
+    .spinner-border.text-primary.loading
+    p.loading__text Vui lòng đợi trong giây lát
+
   .container.d-flex.flex-column.justify-content-center.align-items-center.mt-5
     #add-finish.modal.fade
       .modal-dialog
@@ -75,8 +79,22 @@ body
     script(src="script.js")
     
     script.
-      let gender;
+      //Authentication
+      $.ajax({
+        url: usersURLMin,
+        method: "GET",
+        headers: {Authorization: "Bearer " + localStorage.getItem("changeable-list-token")},
+        error: () => {
+          location.replace("login.html")
+        },
+        success: () => {
+          toggleLoading()
+        }
+      })
 
+      //tạo biến để nhận giá trị input gender
+      let gender;
+      
       $(".gender-input").click(() => {
         if($("#input__gender--male").is(":checked")) {
           gender = "Nam"
@@ -85,17 +103,19 @@ body
         }
       });
 
+      //Sự kiện: click nút "Lưu" sẽ POST data lên db
       $("#save").click(() => {
-        $.post(
-          "https://changeable-list.herokuapp.com/users",
-          {
-          "name": $("input")[0].value,
-          "birthday": $("input")[1].value,
-          "gender": gender,
-          "email": $("input")[4].value,
-          "phone": $("input")[5].value
+        $.ajax({
+          url: usersURL,
+          data: {
+            "name": $("input")[0].value,
+            "birthday": $("input")[1].value,
+            "gender": gender,
+            "email": $("input")[4].value,
+            "phone": $("input")[5].value
           }
-        ).done(function() {
+          //modal sau khi lưu: nhập tiếp hoặc về trang chủ
+        }).done(function() {
             $(".modal-text").html(`
               Thêm hội viên <span class="bold-font">${$("input")[0].value}</span> thành công!
               <br>
@@ -105,6 +125,7 @@ body
           })
       });
 
+      //Sự kiện: click nút "Nhập tiếp" sẽ reset form
       $(".modal--continue").click(() => {
 
         if( $("#input__gender--male").prop("checked") || $("#input__gender--female").prop("checked") ) {
@@ -116,9 +137,10 @@ body
         setTimeout(() => {
           $("#input__name").focus()
         }, 700)
-        
+  
       })      
 
+      //Sự kiện: click nút "Quay lại" sẽ về trang chủ
       $(".modal--back").click(() => {
         location.replace("index.html");
       })

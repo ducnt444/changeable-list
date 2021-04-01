@@ -11,11 +11,23 @@
     <p class="loading__text">Vui lòng đợi trong giây lát</p>
   </div>
   <div class="page-wrapper container flex-column justify-content-center align-items-center mt-5 px-0"> 
-    <nav class="navbar"> 
+    <nav class="navbar w-100 justify-content-center"> 
       <button id="check-btn" type="button">Check!</button>
-      <h1 class="text-center"> <a href="index.html">Danh sách hội viên</a></h1>
-      <div class="account-info"><span class="account__name"></span><span><i class="fas fa-caret-down"></i></span></div>
+      <h1 class="text-center mx-4"> <a href="index.html">Danh sách hội viên</a></h1>
+      <div class="dropdown account-info"><span class="dropdown-toggle account__name" data-toggle="dropdown"></span>
+        <div class="dropdown-menu"><span class="dropdown-item logout-btn" data-toggle="modal" data-target="#logout__modal" data-backdrop="static" data-keyboard="false">Đăng xuất</span></div>
+      </div>
     </nav>
+    <div class="modal fade" id="logout__modal"> 
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <p class="modal__text">Bạn có chắc chắn muốn đăng xuất?</p>
+          </div>
+          <div class="modal-footer d-flex justify-content-center"><a class="btn btn-success modal--confirm" data-dismiss="modal">Xác nhận</a><a class="btn btn-secondary modal--cancel ml-4" data-dismiss="modal">Hủy bỏ    </a></div>
+        </div>
+      </div>
+    </div>
     <div class="modal fade" id="index__modal">
       <div class="modal-dialog">
         <div class="modal-content">

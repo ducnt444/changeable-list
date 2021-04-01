@@ -148,6 +148,10 @@ input[type=checkbox] {
   transition: all 0.3s;
 }
 
+.navbar {
+  position: relative;
+}
+
 .bold-font {
   font-weight: bold !important;
 }
@@ -374,6 +378,28 @@ table input {
   background-color: #000;
   color: #fff;
 }
+
+
+.account-info, #check-btn {
+  position: absolute;
+}
+
+.account-info {
+  top: 5px;
+  right: 10%;
+  cursor: pointer;
+}
+
+#check-btn {
+  top: 5px;
+  left: 30%
+}
+
+.account__name {
+  font-size: 20px;
+  font-weight: 500;
+}
+
 
 
 

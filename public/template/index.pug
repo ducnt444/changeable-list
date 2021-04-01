@@ -17,15 +17,27 @@ body
 
   .page-wrapper.container.flex-column.justify-content-center.align-items-center.mt-5.px-0 
 
-    nav.navbar 
+    nav.navbar.w-100.justify-content-center 
 
       button#check-btn(type="button") Check!
-      h1.text-center 
+      h1.text-center.mx-4 
         a(href="index.html") Danh sách hội viên
-      .account-info
-        span.account__name
-        span
-          i.fas.fa-caret-down
+      .dropdown.account-info
+        span.dropdown-toggle.account__name(data-toggle='dropdown')
+        .dropdown-menu
+          span.dropdown-item.logout-btn(data-toggle="modal" data-target="#logout__modal" data-backdrop="static" data-keyboard="false")
+            | Đăng xuất
+
+    #logout__modal.modal.fade 
+      .modal-dialog
+        .modal-content
+
+          .modal-body
+            p.modal__text Bạn có chắc chắn muốn đăng xuất?
+
+          .modal-footer.d-flex.justify-content-center
+            a.btn.btn-success.modal--confirm(data-dismiss='modal') Xác nhận
+            a.btn.btn-secondary.modal--cancel.ml-4(data-dismiss='modal') Hủy bỏ    
 
     #index__modal.modal.fade
       .modal-dialog

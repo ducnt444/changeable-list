@@ -6,6 +6,10 @@
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
+  <div class="loading-wrapper">
+    <div class="spinner-border text-primary loading"></div>
+    <p class="loading__text">Vui lòng đợi trong giây lát</p>
+  </div>
   <div class="container d-flex flex-column justify-content-center align-items-center mt-5">
     <div class="modal fade" id="add-finish">
       <div class="modal-dialog">
@@ -56,6 +60,20 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
     <script src="script.js"></script>
     <script>
+      //Authentication
+      $.ajax({
+        url: usersURLMin,
+        method: "GET",
+        headers: {Authorization: "Bearer " + localStorage.getItem("changeable-list-token")},
+        error: () => {
+          location.replace("login.html")
+        },
+        success: () => {
+          toggleLoading()
+        }
+      })
+      
+      //tạo biến để nhận giá trị input gender
       let gender;
       
       $(".gender-input").click(() => {
@@ -66,17 +84,19 @@
         }
       });
       
+      //Sự kiện: click nút "Lưu" sẽ POST data lên db
       $("#save").click(() => {
-        $.post(
-          "https://changeable-list.herokuapp.com/users",
-          {
-          "name": $("input")[0].value,
-          "birthday": $("input")[1].value,
-          "gender": gender,
-          "email": $("input")[4].value,
-          "phone": $("input")[5].value
+        $.ajax({
+          url: usersURL,
+          data: {
+            "name": $("input")[0].value,
+            "birthday": $("input")[1].value,
+            "gender": gender,
+            "email": $("input")[4].value,
+            "phone": $("input")[5].value
           }
-        ).done(function() {
+          //modal sau khi lưu: nhập tiếp hoặc về trang chủ
+        }).done(function() {
             $(".modal-text").html(`
               Thêm hội viên <span class="bold-font">${$("input")[0].value}</span> thành công!
               <br>
@@ -86,6 +106,7 @@
           })
       });
       
+      //Sự kiện: click nút "Nhập tiếp" sẽ reset form
       $(".modal--continue").click(() => {
       
         if( $("#input__gender--male").prop("checked") || $("#input__gender--female").prop("checked") ) {
@@ -97,9 +118,10 @@
         setTimeout(() => {
           $("#input__name").focus()
         }, 700)
-        
+      
       })      
       
+      //Sự kiện: click nút "Quay lại" sẽ về trang chủ
       $(".modal--back").click(() => {
         location.replace("index.html");
       })
