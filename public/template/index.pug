@@ -19,12 +19,18 @@ body
     form.login-form.d-flex.flex-column.align-items-center(action="")
       .input-group
         label(for="email-input") Email
-        input#email-input(type="text")
+        input#email-input(type="text" placeholder="test")
       .input-group
         label(for="password-input") Mật khẩu
-        input#password-input(type="text")
+        input#password-input(type="text" placeholder="123")
       .input-group.d-flex.justify-content-center
         a.btn.btn-success.login-confirm Xác nhận
+    
+  .login-modal 
+    .login-modal__body
+      .login-modal__text.mb-4 
+        .spinner-border
+      button.login-modal__cancel.btn.btn-success.login-confirm--fail(type="button") Xác nhận
 
   script(src='https://kit.fontawesome.com/d8c5e3f38e.js' crossorigin='anonymous')
 
@@ -35,14 +41,43 @@ body
   script(src="script.js")
 
   script.
+    function hideModal() {
+      setTimeout(() => { 
+        $(".login-modal").removeClass("modal--active");
+        $(".login-modal__text").html('<div class="spinner-border"></div>')
+        }, 2000)
+    }
+
+    function processToMain() {
+      setTimeout(() => { 
+        location.replace("main.html");
+        }, 2000)
+    }
+
+    $(".login-confirm--fail").click(()=>{
+      $(".login-modal").removeClass("modal--active");
+    })
+
     $(".login-confirm").click(() => {
       let emailInput = $("#email-input").val()
       let passwordInput = $("#password-input").val()
+      $(".login-modal").addClass("modal--active");
+
       $.ajax({
         url: API_URL + "/login",
         method: "POST",
-        data: {"email": emailInput, "password": passwordInput}
-      }).done(()=> console.log("ok"))
+        data: {"email": emailInput, "password": passwordInput},
+        error: () => {
+          $(".login-modal__text").html("Tài khoản hoặc mật khẩu chưa đúng")
+          $(".login-modal__cancel").css("display", "block")
+          hideModal()
+        },
+        success: ()=> {
+          $(".login-modal__cancel").css("display", "none")
+          $(".login-modal__text").html("Đăng nhập thành công")
+          location.replace("main.html");
+        }
+      })
     })
 
       

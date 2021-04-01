@@ -3,7 +3,7 @@
     "users": ["POST", "PUT", "PATCH", "DELETE"]
   },
   "users": [
-    {"id":1,"name":"Aurea Mucklo","gender":"Male","birthday":"05/09/1977","phone":"712-514-9467","email":"amucklo0@seesaa.net","password":"teZNlvjIEW"},
+    {"id":1,"name":"Nguyễn Trung Đức","gender":"Male","birthday":"19/05/1993","phone":"039-749-6263","email":"test","password":"123"},
     {"id":2,"name":"Clerc Sawkins","gender":"Female","birthday":"17/04/1994","phone":"242-176-3329","email":"csawkins1@hud.gov","password":"9rM6fDllAQOk"},
     {"id":3,"name":"Joye Barkly","gender":"Female","birthday":"09/01/1979","phone":"587-196-3478","email":"jbarkly2@oakley.com","password":"TT6g3GT"},
     {"id":4,"name":"Charlie Hodgets","gender":"Male","birthday":"19/03/1996","phone":"868-465-6388","email":"chodgets3@bandcamp.com","password":"PDJ79T"},
