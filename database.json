@@ -1,6 +1,6 @@
 {
   "protected_resources": {
-    "users": ["POST", "PUT", "PATCH", "DELETE"]
+    "users": ["GET", "PUT", "PATCH", "DELETE"]
   },
   "users": [
     {"id":1,"name":"Nguyễn Trung Đức","gender":"Male","birthday":"19/05/1993","phone":"039-749-6263","email":"test","password":"123"},

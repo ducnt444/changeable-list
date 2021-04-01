@@ -67,8 +67,8 @@
         success: (response)=> {
           $(".login-modal__cancel").css("display", "none")
           $(".login-modal__text").html("Đăng nhập thành công")
-          localStorage.setItem("changable-list-token", `${response.token}`)
-          console.log("Stored token: " + localStorage.getItem("token"))
+          localStorage.setItem("changeable-list-token", `${response.token}`)
+          console.log("Stored token: " + localStorage.getItem("changeable-list-token"))
           console.log("Response token: " + response.token)
         }
       })

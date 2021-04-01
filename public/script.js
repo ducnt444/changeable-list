@@ -145,12 +145,11 @@ function updateUsers() {
 
 //load trang
 function loadFirstPageFullData() {
-  $.ajax(
-
-  )
-  $.get(
-    `${usersURL}?${usersURLSorted}`
-    ).done(function (data) {
+  $.ajax({
+    url: `${usersURL}?${usersURLSorted}`,
+    method: "GET",
+    headers: {Authorization: `Bearer ${localStorage.getItem("changeable-list-token")}`}
+  }).done(function (data) {
       //clone data
       users = data;
   
