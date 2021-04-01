@@ -45,13 +45,13 @@ body
       setTimeout(() => { 
         $(".login-modal").removeClass("modal--active");
         $(".login-modal__text").html('<div class="spinner-border"></div>')
-        }, 2000)
+        }, 1500)
     }
 
     function processToMain() {
       setTimeout(() => { 
         location.replace("main.html");
-        }, 2000)
+        }, 1500)
     }
 
     $(".login-confirm--fail").click(()=>{
@@ -72,10 +72,12 @@ body
           $(".login-modal__cancel").css("display", "block")
           hideModal()
         },
-        success: ()=> {
+        success: (response)=> {
           $(".login-modal__cancel").css("display", "none")
           $(".login-modal__text").html("Đăng nhập thành công")
-          location.replace("main.html");
+          localStorage.setItem("changable-list-token", `${response.token}`)
+          console.log("Stored token: " + localStorage.getItem("token"))
+          console.log("Response token: " + response.token)
         }
       })
     })

@@ -22,25 +22,10 @@ body
       button#check-btn(type="button") Check!
       h1.text-center 
         a(href="main.html") Danh sách hội viên
-      button.login(type="button" data-toggle="modal" data-target="#login__modal" data-backdrop="static" data-keyboard="false") Đăng nhập
-    
-    #login__modal.modal.fade
-      .modal-dialog
-        .modal-content
-
-          .modal-body
-            h2.text-center Đăng nhập
-            form.login-form.d-flex.flex-column.align-items-center(action="")
-              .input-group
-                label(for="email-input") Email
-                input#email-input(type="text" placeholder="Email")
-              .input-group
-                label(for="password-input") Mật khẩu
-                input#password-input(type="text" placeholder="Password")
-
-          .modal-footer.d-flex.justify-content-center
-            a.btn.btn-success.login-confirm(data-dismiss='modal') Xác nhận
-            a.btn.btn-secondary.ml-4(data-dismiss='modal') Hủy bỏ
+      .account-info
+        span.account__name
+        span
+          i.fas.fa-caret-down
 
     #index__modal.modal.fade
       .modal-dialog

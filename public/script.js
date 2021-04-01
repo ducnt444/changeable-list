@@ -145,6 +145,9 @@ function updateUsers() {
 
 //load trang
 function loadFirstPageFullData() {
+  $.ajax(
+    
+  )
   $.get(
     `${usersURL}?${usersURLSorted}`
     ).done(function (data) {

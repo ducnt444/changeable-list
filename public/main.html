@@ -14,28 +14,8 @@
     <nav class="navbar"> 
       <button id="check-btn" type="button">Check!</button>
       <h1 class="text-center"> <a href="main.html">Danh sách hội viên</a></h1>
-      <button class="login" type="button" data-toggle="modal" data-target="#login__modal" data-backdrop="static" data-keyboard="false">Đăng nhập</button>
+      <div class="account-info"><span class="account__name"></span><span><i class="fas fa-caret-down"></i></span></div>
     </nav>
-    <div class="modal fade" id="login__modal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-body">
-            <h2 class="text-center">Đăng nhập</h2>
-            <form class="login-form d-flex flex-column align-items-center" action="">
-              <div class="input-group">
-                <label for="email-input">Email</label>
-                <input id="email-input" type="text" placeholder="Email">
-              </div>
-              <div class="input-group">
-                <label for="password-input">Mật khẩu</label>
-                <input id="password-input" type="text" placeholder="Password">
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer d-flex justify-content-center"><a class="btn btn-success login-confirm" data-dismiss="modal">Xác nhận</a><a class="btn btn-secondary ml-4" data-dismiss="modal">Hủy bỏ</a></div>
-        </div>
-      </div>
-    </div>
     <div class="modal fade" id="index__modal">
       <div class="modal-dialog">
         <div class="modal-content">
