@@ -34,6 +34,16 @@ body
 
   script(src="script.js")
 
+  script.
+    $(".login-confirm").click(() => {
+      let emailInput = $("#email-input").val()
+      let passwordInput = $("#password-input").val()
+      $.ajax({
+        url: API_URL + "/login",
+        method: "POST",
+        data: {"email": emailInput, "password": passwordInput}
+      }).done(()=> console.log("ok"))
+    })
 
       
 

@@ -24,4 +24,20 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
   <script src="script.js"></script>
+  <script>
+    $(".login-confirm").click(() => {
+      let emailInput = $("#email-input").val()
+      let passwordInput = $("#password-input").val()
+      $.ajax({
+        url: API_URL + "/login",
+        method: "POST",
+        data: {"email": emailInput, "password": passwordInput}
+      }).done(()=> console.log("ok"))
+    })
+    
+      
+    
+    
+            
+  </script>
 </body>

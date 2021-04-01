@@ -3,7 +3,8 @@
  setup global
 ------------------------------------------------------------------------------------------ */
 
-//Shorthand cho URL của users và URL users (sorted)
+//Shorthand cho các URL
+let API_URL = "https://changable-list-test.herokuapp.com"
 let usersURL = "https://changable-list-test.herokuapp.com/users"
 let usersURLSorted = "&_sort=id&_order=desc"
 
