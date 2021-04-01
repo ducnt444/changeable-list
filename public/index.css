@@ -376,9 +376,34 @@ table input {
 }
 
 #check-btn {
-  position: absolute;
-  top: 50px;
-  right: 100px;
+  
+}
+
+
+
+.index-wrapper {
+  max-width: 400px;
+  margin-top: 100px;
+}
+
+
+
+.index-wrapper .input-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  height: 40px;
+}
+
+.index-wrapper .input-group label {
+  width: auto;
+}
+
+.index-wrapper input {
+  padding-left: 10px;
+  height: 100%;
+  width: 75%;
 }
 
 

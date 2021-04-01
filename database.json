@@ -1,4 +1,7 @@
 {
+  "protected_resources": {
+    "users": ["POST", "PUT", "PATCH", "DELETE"]
+  },
   "users": [
     {"id":1,"name":"Gweneth Lumm","gender":"Nam","birthday":"10/02/1993","phone":"601-100-3091","email":"glumm0@sogou.com"},
     {"id":2,"name":"Licha Groundwater","gender":"Nữ","birthday":"04/02/2002","phone":"152-658-6185","email":"lgroundwater1@aboutads.info"},

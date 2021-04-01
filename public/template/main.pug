@@ -1,0 +1,148 @@
+
+doctype html
+head
+  title Danh sách học viên
+  
+  link(rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous')
+
+  link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css' integrity='sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l' crossorigin='anonymous')
+
+  link(rel="stylesheet" href="index.css")
+
+body
+
+  .loading-wrapper
+    .spinner-border.text-primary.loading
+    p.loading__text Vui lòng đợi trong giây lát
+
+  .page-wrapper.container.flex-column.justify-content-center.align-items-center.mt-5.px-0 
+
+    nav.navbar 
+
+      button#check-btn(type="button") Check!
+      h1.text-center 
+        a(href="main.html") Danh sách hội viên
+      button.login(type="button" data-toggle="modal" data-target="#login__modal" data-backdrop="static" data-keyboard="false") Đăng nhập
+    
+    #login__modal.modal.fade
+      .modal-dialog
+        .modal-content
+
+          .modal-body
+            h2.text-center Đăng nhập
+            form.login-form.d-flex.flex-column.align-items-center(action="")
+              .input-group
+                label(for="email-input") Email
+                input#email-input(type="text" placeholder="Email")
+              .input-group
+                label(for="password-input") Mật khẩu
+                input#password-input(type="text" placeholder="Password")
+
+          .modal-footer.d-flex.justify-content-center
+            a.btn.btn-success.login-confirm(data-dismiss='modal') Xác nhận
+            a.btn.btn-secondary.ml-4(data-dismiss='modal') Hủy bỏ
+
+    #index__modal.modal.fade
+      .modal-dialog
+        .modal-content
+
+          .modal-body
+            p.modal__text
+
+          .modal-footer.d-flex.justify-content-center
+            a.btn.btn-success.modal--success(data-dismiss='modal') Xác nhận
+            a.btn.btn-secondary.modal--cancel.ml-4(data-dismiss='modal') Hủy bỏ
+
+    #choose-page__modal.modal.fade
+      .modal-dialog.modal-dialog-centered.modal-sm
+        .modal-content
+
+          .modal-body
+            p.choose-page__text.text-center Nhập số trang
+            input.choose-page__input.d-block.mx-auto.mt-3(type="number")
+
+          .modal-footer.d-flex.justify-content-center
+            a.btn.btn-success.choose-page__confirm(data-dismiss='modal') Xác nhận
+            a.btn.btn-secondary.choose-page__cancel.ml-3(data-dismiss='modal') Hủy bỏ
+
+
+
+    form.search-area(action="")
+      input.form-control.search-input(type='text' placeholder='Tìm theo tên, năm sinh...')
+        
+      button.search-submit.btn.btn-outline-dark(type="button") 
+        i.fas.fa-search
+
+    p.search__result.text-center
+    
+     
+
+    .buttons-wrapper.d-flex.justify-content-center.w-100 
+      a.bg-danger.align-self-start.btn.btn--delete-selected.my-4.disabled(data-toggle="modal" data-target="#index__modal" data-backdrop="static" data-keyboard="false")
+        span.text-light
+          i.fas.fa-trash-alt.mr-2
+        span.text-light.ml-2 Xóa các mục được chọn
+
+      .custom-pagination.d-flex.justify-content-between.align-items-center.mx-auto 
+        button.custom-pagination__item.btn.first-page
+          i.fas.fa-angle-double-left
+
+        button.custom-pagination__item.btn.prev-page
+          i.fas.fa-angle-left
+          
+        p.custom-pagination__display-text
+
+        button.custom-pagination__item.btn.next-page
+          i.fas.fa-angle-right
+
+        button.custom-pagination__item.btn.last-page
+          i.fas.fa-angle-double-right
+
+      a.bg-success.align-self-start.btn.btn--add.my-4(href="create.html")
+        span.text-light 
+          i.fas.fa-plus-circle
+        span.text-light.ml-2 Thêm hội viên
+
+    table.table.table-striped.mb-4
+      thead.thead-dark
+        tr.table-head
+          th 
+            input(type="checkbox")
+          th Họ tên
+          th Ngày sinh 
+          th Giới tính
+          th Email
+          th Số điện thoại
+          th Thao tác
+          
+      tbody
+  
+    .custom-pagination.d-flex.justify-content-between.align-items-center.mx-auto 
+      button.custom-pagination__item.btn.first-page
+        i.fas.fa-angle-double-left
+
+      button.custom-pagination__item.btn.prev-page
+        i.fas.fa-angle-left
+        
+      p.custom-pagination__display-text
+
+      button.custom-pagination__item.btn.next-page
+        i.fas.fa-angle-right
+
+      button.custom-pagination__item.btn.last-page
+        i.fas.fa-angle-double-right
+
+    script(src='https://kit.fontawesome.com/d8c5e3f38e.js' crossorigin='anonymous')
+
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js')
+
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js' integrity='sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns' crossorigin='anonymous')
+
+    script(src="script.js")
+
+    script(src="main.js")
+
+      
+
+    
+            
