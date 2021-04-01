@@ -150,7 +150,7 @@ function loadFirstPageFullData() {
     method: "GET",
     headers: {Authorization: `Bearer ${localStorage.getItem("changeable-list-token")}`},
     error: () => {
-      location.replace("index.html");
+      location.replace("login.html");
     }
   }).done(function (data) {
       //clone data
