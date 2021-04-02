@@ -96,7 +96,7 @@ $("#index__modal").on('click', '.modal--success.delete--single', function() {
 
   $.ajax({
     url: `${usersURL}/${targetId}`,
-    type: "DELETE",
+    method: "DELETE",
     headers: bearerToken,
     success: () => {
       $.ajax({
