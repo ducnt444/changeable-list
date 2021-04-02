@@ -98,10 +98,12 @@ $("#index__modal").on('click', '.modal--success.delete--single', function() {
     type: "DELETE",
     headers: bearerToken,
     success: () => {
-      $.get(
+      $.ajax({
+        url: `${usersURL}?${usersURLSorted}`,
         /* `${usersURL}?${usersURLSorted}&_page=${currentPage}&_limit=${currentLimit}` */
-        `${usersURL}?${usersURLSorted}`
-      ).done((data) => {
+        method: "GET",
+        headers: bearerToken
+      }).done((data) => {
         updateData(data); //update global variables
 
         renderCurrentPage(); //render lại bảng
