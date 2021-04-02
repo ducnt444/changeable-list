@@ -172,7 +172,9 @@ function firstLoad() {
       users = data
 
       usersQuantity = res.getResponseHeader("X-Total-Count");
+      
       pagesQuantity = Math.ceil(usersQuantity / 10);
+
       $(".account__name").text(localStorage.getItem("active-user-name"))
 
       //render table (page 1)
@@ -207,11 +209,7 @@ function loadFirstPageFullData() {
       //update số lượng pages
       pagesQuantity = Math.ceil(usersQuantity / 10);
 
-      let activeUserIDInGlobalVar = users.findIndex(
-        item => item.id.toString() == activeUserID
-      )
-
-      $(".account__name").text(users[activeUserIDInGlobalVar].name)
+      $(".account__name").text(localStorage.getItem("active-user-name"))
 
       //render table (page 1)
       renderCurrentPage()
@@ -220,7 +218,7 @@ function loadFirstPageFullData() {
       $(".page-wrapper").css("display", "flex");
   
       //check
-      console.log(`Bearer ${token}`)
+
       console.log("Total users: " + usersQuantity);
       console.log("Total pages: " + pagesQuantity);
       console.log(`Current page: ${currentPage}/${pagesQuantity}`);

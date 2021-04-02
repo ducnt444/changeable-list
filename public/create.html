@@ -88,13 +88,15 @@
       $("#save").click(() => {
         $.ajax({
           url: usersURL,
+          method: "POST",
           data: {
             "name": $("input")[0].value,
             "birthday": $("input")[1].value,
             "gender": gender,
             "email": $("input")[4].value,
             "phone": $("input")[5].value
-          }
+          },
+          headers: bearerToken
           //modal sau khi lưu: nhập tiếp hoặc về trang chủ
         }).done(function() {
             $(".modal-text").html(`

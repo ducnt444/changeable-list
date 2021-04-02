@@ -6,6 +6,10 @@
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
+  <div class="loading-wrapper">
+    <div class="spinner-border text-primary loading"></div>
+    <p class="loading__text">Vui lòng đợi trong giây lát</p>
+  </div>
   <div class="container d-flex flex-column justify-content-center align-items-center mt-5">
     <div class="modal fade" id="add-finish">
       <div class="modal-dialog">
@@ -62,6 +66,9 @@
         url: `${usersURL}/${userID}`,
         method: "GET",
         headers: {Authorization: "Bearer " + token},
+        error: () => {
+          location.replace("login.html")
+        },
         success: (data) => {
           $("input")[0].value = data.name;
           $("input")[1].value = data.birthday;
@@ -72,6 +79,7 @@
           }
           $("input")[4].value = data.email;
           $("input")[5].value = data.phone;
+          toggleLoading()
         }
       })
       

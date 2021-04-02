@@ -10,6 +10,10 @@ head
   link(rel="stylesheet" href="index.css")
 
 body
+  .loading-wrapper
+    .spinner-border.text-primary.loading
+    p.loading__text Vui lòng đợi trong giây lát
+
   .container.d-flex.flex-column.justify-content-center.align-items-center.mt-5
     #add-finish.modal.fade
       .modal-dialog
@@ -77,11 +81,14 @@ body
     script.
 
       let userID = location.href.split("?")[1];
-
+      
       $.ajax({
         url: `${usersURL}/${userID}`,
         method: "GET",
         headers: {Authorization: "Bearer " + token},
+        error: () => {
+          location.replace("login.html")
+        },
         success: (data) => {
           $("input")[0].value = data.name;
           $("input")[1].value = data.birthday;
@@ -92,6 +99,7 @@ body
           }
           $("input")[4].value = data.email;
           $("input")[5].value = data.phone;
+          toggleLoading()
         }
       })
 
