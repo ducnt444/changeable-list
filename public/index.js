@@ -46,6 +46,7 @@ let isOldFirst = false //có đang trong mode sắp xếp item cũ nhất lên t
 ------------------------------------------------------------------------------------------ */
 $("#check-btn").click( () => {
   console.log(users)
+  renderCurrentPage()
 })
 
 /* ------------------------------------------------------------------------------------------
@@ -233,40 +234,54 @@ $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
 
     let lastLoop = selectedArray.length - 1; //xác định vòng lặp cuối cùng (để tắt loading)
 
-    $.ajax({ //1.1 Xóa các hội viên trong array đó khỏi database; 
-      url: `${usersURL}/${selectedArray[i]}`,
-      type: "DELETE",
-      headers: bearerToken
-    }).done( () => { //1.2 Update chay data clone (users), không dùng GET
+    if (i != selectedArray.length - 1) {
+      $.ajax({ //1.1 Xóa các hội viên trong array đó khỏi database; 
+        url: `${usersURL}/${selectedArray[i]}`,
+        type: "DELETE",
+        headers: bearerToken,
+        success: () => {
+          let target = users.findIndex(
+            item => item.id.toString() == selectedArray[i] //tìm index của item bị xóa trong users
+          );
+          users.splice(target, 1);
+          updateUsers()
+          
+        }
+      })
 
-      console.log(selectedArray);
+    } else {
+      $.ajax({ //1.1 Xóa các hội viên trong array đó khỏi database; 
+        url: `${usersURL}/${selectedArray[i]}`,
+        type: "DELETE",
+        headers: bearerToken
+      }).done( () => { //1.2 Update chay data clone (users), không dùng GET
+  
+        console.log(selectedArray);
+  
+        console.log("target ID in array: " + selectedArray[i]);
+  
+        let target = users.findIndex(
+          item => item.id.toString() == selectedArray[i] //tìm index của item bị xóa trong users
+        );
+  
+        console.log("target ID index in users: " + target);
+  
+        users.splice(target, 1); //xóa item đó trong users
+  
+        console.log(users)
+  
+        updateUsers(); //1.3 Update các global variables liên quan (theo users)
+  
+        renderCurrentPage(); //1.4 Render lại trang hiện tại;
+  
+        toggleLoading(); //tắt loading tại vòng loop cuối cùng
 
-      console.log("target ID in array: " + selectedArray[i]);
-
-      let target = users.findIndex(
-        item => item.id.toString() == selectedArray[i] //tìm index của item bị xóa trong users
-      );
-
-      console.log("target ID index in users: " + target);
-
-      users.splice(target, 1); //xóa item đó trong users
-
-      console.log(users)
-
-      updateUsers(); //1.3 Update các global variables liên quan (theo users)
-
-      renderCurrentPage(); //1.4 Render lại trang hiện tại;
-
-      toggleLoadingOff(lastLoop, i); //tắt loading tại vòng loop cuối cùng
-
-/*       console.log("data length: " + users.length);
-      console.log("users length: " + users.length);
-      console.log("users quantity: " + usersQuantity);
-      console.log("page quantity: " + pagesQuantity);  */
-    })
+        //2. Reset selected Array 
+        selectedArray = [];
+        console.log(selectedArray);
+      })
+    }
   }
-
-  //2. Reset selected Array 
 
   //3. Xóa xong thì bỏ check ở nút check tổng
   if ($("thead input").is(":checked")) {
