@@ -96,6 +96,7 @@ $("#index__modal").on('click', '.modal--success.delete--single', function() {
   $.ajax({
     url: `${usersURL}/${targetId}`,
     type: "DELETE",
+    headers: bearerToken,
     success: () => {
       $.get(
         /* `${usersURL}?${usersURLSorted}&_page=${currentPage}&_limit=${currentLimit}` */
@@ -232,8 +233,8 @@ $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
 
     $.ajax({ //1.1 Xóa các hội viên trong array đó khỏi database; 
       url: `${usersURL}/${selectedArray[i]}`,
-      type: "DELETE"
-
+      type: "DELETE",
+      headers: bearerToken
     }).done( () => { //1.2 Update chay data clone (users), không dùng GET
 
       console.log(selectedArray);
@@ -310,7 +311,7 @@ $(".search-submit").click(() => {
     //get toàn bộ user phù hợp search (bỏ _page và _limit, nhưng sau đó sẽ chỉ render 10 items đầu tiên)
     url: `${usersURL}?q=${searchInput}&_sort=id&_order=desc`,
     method: "GET",
-    headers: {Authorization: "Bearer " + token}
+    headers: bearerToken
   }).done(
     function(data) {
       if (data.length > 0) {
