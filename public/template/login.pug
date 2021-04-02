@@ -78,14 +78,21 @@ body
           hideModal()
         },
         success: (response)=> {
-          localStorage.setItem("changeable-list-token", response.token)
-          localStorage.setItem("active-user-id", JSON.stringify(response.id))
-          localStorage.setItem("active-user-name", JSON.stringify(response.name))
 
           $(".login-modal__cancel").css("display", "none")
           $(".login-modal__text").html("Đăng nhập thành công <br> <span class='my-2 d-block'> Bạn sẽ được chuyển về trang chủ </span> <br> <span class='spinner-border'></span>")
-          console.log( "Response " + JSON.stringify(response.id) )
-          console.log("Token " + response.token)
+          
+          localStorage.setItem("active-user-id", response.id)
+          localStorage.setItem("active-user-name", response.name)
+          localStorage.setItem("changeable-list-token", response.token)
+
+          console.log( "Response id: " + typeof(response.id) + " " + response.id)
+          console.log( "Response name: " + typeof(response.name) + " " + response.name )
+          console.log( "Response token: " + typeof(response.token) + " " + response.token )
+          console.log("----------------")
+          console.log( "LocalStorage active-user-id: " + typeof(localStorage.getItem("active-user-id")) + " " + localStorage.getItem("active-user-id") )
+          console.log( "LocalStorage active-user-name: " + typeof(localStorage.getItem("active-user-name")) + " " + localStorage.getItem("active-user-name") )
+
           processToIndex()
         }
       })

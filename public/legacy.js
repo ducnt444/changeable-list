@@ -506,3 +506,5 @@ li.page-item.next-page
 li.page-item.last-page
   a.page-link
     i.fas.fa-angle-double-right */
+
+//GET toàn bộ user khi load, clone bằng users

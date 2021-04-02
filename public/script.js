@@ -167,7 +167,24 @@ function firstLoad() {
       location.replace("login.html");
     }
   }).done(
+    function(data, status, res) {
 
+      users = data
+
+      usersQuantity = res.getResponseHeader("X-Total-Count");
+      pagesQuantity = Math.ceil(usersQuantity / 10);
+      $(".account__name").text(localStorage.getItem("active-user-name"))
+
+      //render table (page 1)
+      renderCurrentPage()
+
+      toggleLoading()
+      $(".page-wrapper").css("display", "flex");
+
+      console.log(res.getResponseHeader("X-Total-Count"));
+      console.log(res);
+
+    }
   )
 }
 
