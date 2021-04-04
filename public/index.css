@@ -393,7 +393,7 @@ table input {
 #check-btn {
   top: 5px;
   left: 30%;
-  display: none;
+  opacity: 0;
 }
 
 .account__name {

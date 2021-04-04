@@ -245,7 +245,6 @@ $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
           );
           users.splice(target, 1);
           updateUsers()
-          
         }
       })
 
@@ -253,32 +252,36 @@ $("#index__modal").on("click", ".modal--success.delete--multiple", () => {
       $.ajax({ //1.1 Xóa các hội viên trong array đó khỏi database; 
         url: `${usersURL}/${selectedArray[i]}`,
         type: "DELETE",
-        headers: bearerToken
-      }).done( () => { //1.2 Update chay data clone (users), không dùng GET
-  
-        console.log(selectedArray);
-  
-        console.log("target ID in array: " + selectedArray[i]);
-  
-        let target = users.findIndex(
-          item => item.id.toString() == selectedArray[i] //tìm index của item bị xóa trong users
-        );
-  
-        console.log("target ID index in users: " + target);
-  
-        users.splice(target, 1); //xóa item đó trong users
-  
-        console.log(users)
-  
-        updateUsers(); //1.3 Update các global variables liên quan (theo users)
-  
-        renderCurrentPage(); //1.4 Render lại trang hiện tại;
-  
-        toggleLoading(); //tắt loading tại vòng loop cuối cùng
+        headers: bearerToken,
+        success: () => {
+          console.log("Last loop starts: array is " + selectedArray);
 
-        //2. Reset selected Array 
-        selectedArray = [];
-        console.log(selectedArray);
+          console.log("Last loop starts: users quantity " + users.length);
+    
+          console.log("Last loop: last item in array: " + selectedArray[i]);
+    
+          let target = users.findIndex(
+            item => item.id.toString() == selectedArray[i] //tìm index của item bị xóa trong users
+          );
+    
+          console.log("ID of (last item in array) in users: " + target);
+    
+          users.splice(target, 1); //xóa item đó trong users
+    
+          console.log("Last loop ends: users quantity " + users.length)
+    
+          updateUsers(); //1.3 Update các global variables liên quan (theo users)
+
+          setTimeout(() => {
+            renderCurrentPage(); //1.4 Render lại trang hiện tại;
+    
+            toggleLoading(); //tắt loading tại vòng loop cuối cùng
+          }, 1000);
+    
+          //2. Reset selected Array 
+          selectedArray = [];
+          console.log("Last loop ends: array is " + selectedArray);
+        }
       })
     }
   }
