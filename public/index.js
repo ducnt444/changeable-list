@@ -61,19 +61,15 @@ loadFirstPageFullData()
  "xóa đơn" toggler
 ------------------------------------------------------------------------------------------ */
 
-/*
-A. Event "click nút xóa đơn": 
-1. Update modal confirm
-2. Lấy targetID
-*/
+/* A. Event "click nút xóa đơn": */
 $("tbody").on('click', '.btn--delete', function() {
   //1. Update modal confirm
   $("#index__modal .modal--success").addClass("delete--single"); //nút xác nhận: đổi sang chế độ "xác nhận xóa đơn"
 
-  $("#index__modal .modal--cancel").css("display", "block"); //nút cancel được hiển th
+  $("#index__modal .modal--cancel").css("display", "block"); 
 
   $("#index__modal .modal__text").html(
-    //nội dung .modal__text thay đổi
+
     `Bạn có muốn xóa hội viên <span class="bold-font">${$(this)
       .parents("tr")
       .children("td:nth-child(2)")
@@ -92,7 +88,7 @@ B. Event "click confirm xóa đơn":
 */ 
 $("#index__modal").on('click', '.modal--success.delete--single', function() {
 
-  toggleLoading(); //bật loading
+  toggleLoading(); 
 
   $.ajax({
     url: `${usersURL}/${targetId}`,
@@ -101,7 +97,6 @@ $("#index__modal").on('click', '.modal--success.delete--single', function() {
     success: () => {
       $.ajax({
         url: `${usersURL}?${usersURLSorted}`,
-        /* `${usersURL}?${usersURLSorted}&_page=${currentPage}&_limit=${currentLimit}` */
         method: "GET",
         headers: bearerToken
       }).done((data) => {
@@ -109,9 +104,8 @@ $("#index__modal").on('click', '.modal--success.delete--single', function() {
 
         renderCurrentPage(); //render lại bảng
 
-        toggleLoading(); //tắt loading
+        toggleLoading(); 
 
-        //check
         console.log(`Deleted 1 user ID: ${targetId}`);
         console.log("Total users: " + usersQuantity);
         console.log(`Current page: ${currentPage}/${pagesQuantity}`);
@@ -167,7 +161,6 @@ $("tbody").on('change', 'input', function() {
       selectedArray.indexOf( $(this).parents("tr").attr('id') ), 1
     )
     console.log(`Selected [${selectedArray.length}]: ${selectedArray}`);
-
 
 /*     $.ajax({
       url: `${usersURL}/${$(this).parents("tr").attr('id')}`,
