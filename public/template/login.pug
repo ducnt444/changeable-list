@@ -26,6 +26,8 @@ body
       .input-group.d-flex.justify-content-center
         a.btn.btn-success.login-confirm Xác nhận
     
+    a(href="https://journey-card-game.herokuapp.com/") News: Journey - the card game đã early access
+
   .login-modal 
     .login-modal__body
       .login-modal__text.text-center 
@@ -41,9 +43,6 @@ body
   script(src="script.js")
 
   script.
-    console.log( "Active user: " + localStorage.getItem("active-user-name") )
-    console.log( "Active user ID: " + localStorage.getItem("active-user-id") )
-    console.log( "Active token: " + localStorage.getItem("changeable-list-token") )
 
     function hideModal() {
       setTimeout(() => { 

@@ -18,7 +18,7 @@
         <input id="password-input" type="text" placeholder="123">
       </div>
       <div class="input-group d-flex justify-content-center"><a class="btn btn-success login-confirm">Xác nhận</a></div>
-    </form>
+    </form><a href="https://journey-card-game.herokuapp.com/">News: Journey - the card game đã early access</a>
   </div>
   <div class="login-modal"> 
     <div class="login-modal__body">
@@ -33,11 +33,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
   <script src="script.js"></script>
   <script>
-    console.log("start")
-    console.log( "Active user: " + localStorage.getItem("active-user-name") )
-    console.log( "Active user ID: " + localStorage.getItem("active-user-id") )
-    console.log( "Active token: " + localStorage.getItem("changeable-list-token") )
-    
     function hideModal() {
       setTimeout(() => { 
         $(".login-modal").removeClass("modal--active");
